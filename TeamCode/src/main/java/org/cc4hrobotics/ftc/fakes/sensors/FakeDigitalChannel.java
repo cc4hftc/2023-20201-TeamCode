@@ -5,15 +5,16 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
 
 public class FakeDigitalChannel implements DigitalChannel {
     boolean state = true;
+    Mode mode;
 
     @Override
     public Mode getMode() {
-        return null;
+        return mode;
     }
 
     @Override
     public void setMode(Mode mode) {
-
+        this.mode = mode;
     }
 
     // IMPLEMENT ME

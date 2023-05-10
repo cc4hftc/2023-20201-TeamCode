@@ -8,6 +8,7 @@ import java.util.List;
 
 public class FakeTelemetry implements Telemetry {
     private boolean outputTelemetry = true;
+    private int loopCount = 0;
 
     public void setOutputTelemetry(boolean flag) {
         outputTelemetry = flag;
@@ -79,11 +80,15 @@ public class FakeTelemetry implements Telemetry {
 
     }
 
+    public void setLoopCount(int lc) {
+        loopCount = lc;
+    }
+
     @Override
     public boolean update() {
         if (outputTelemetry && !list.isEmpty()) {
-            System.out.println("Telemetry Update");
-            System.out.println("----------------");
+            System.out.println("Telemetry Update (lc=" + loopCount + ")");
+            System.out.println("--------------------------");
             for (String s: list ) {
                 System.out.println(s);
             }
