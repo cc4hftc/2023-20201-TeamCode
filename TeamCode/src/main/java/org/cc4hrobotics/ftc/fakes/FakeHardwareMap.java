@@ -24,6 +24,7 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -38,8 +39,8 @@ public class FakeHardwareMap extends HardwareMap {
     Map<String, HardwareDevice> deviceMap = new HashMap<>();
     Map<HardwareDevice, String> deviceNames = new HashMap<>();
 
-    public FakeHardwareMap(Context appContext) {
-        super(appContext);
+    public FakeHardwareMap(Context appContext, OpModeManagerNotifier notifier) {
+        super(appContext, notifier);
     }
 
     public void addDevice(String deviceName, HardwareDevice device) {

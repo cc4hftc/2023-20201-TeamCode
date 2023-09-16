@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 
 import android.content.Context;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.cc4hrobotics.ftc.fakes.FakeHardwareMap;
@@ -29,7 +30,7 @@ public class LearnJavaTest {
     @Test
     public void RunIt() {
         double distance = 10;
-        LearnJavaOpMode ljt = new LearnJavaOpMode();
+        TestableOpMode ljt = new TestableOpMode();
 
         ljt.telemetry = fakeTelemetry;
         ljt.hardwareMap = hardwareMap;
@@ -76,7 +77,7 @@ public class LearnJavaTest {
     @Before
     public void setup() {
 
-        hardwareMap = new FakeHardwareMap(mock(Context.class));
+        hardwareMap = new FakeHardwareMap(mock(Context.class), mock(OpModeManagerNotifier.class));
 
         leftDriveMotor = new FakeExtendedDcMotor();
         hardwareMap.addDevice("left_drive", leftDriveMotor);

@@ -1,11 +1,11 @@
 package org.cc4hrobotics.ftc.fakes;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.cc4hrobotics.ftc.fakes.control.FakeGamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,7 +27,7 @@ public abstract class TestOpMode {
     /**
      * Hardware Mappings
      */
-    public HardwareMap hardwareMap = new FakeHardwareMap(null);
+    public HardwareMap hardwareMap = new FakeHardwareMap(null, null);
 
     /**
      * number of seconds this op mode has been running, this is
