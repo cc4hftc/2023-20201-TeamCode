@@ -5,12 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * This is an example minimal implementation of the mecanum drivetrain
@@ -32,7 +27,8 @@ public class Driver_Controlled extends OpMode {
     private DcMotor back_right  = null;
     private DcMotor intake_left = null;
     private DcMotor intake_right = null;
-    private Servo claw = null;
+    private CRServo claw = null;
+    private CRServo claw2 = null;
     private Servo plane_launcher = null;
     private int intake = 0;
 
@@ -51,7 +47,10 @@ public class Driver_Controlled extends OpMode {
         intake_right = hardwareMap.get(DcMotor.class, "intakeRight");
         intake_left.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        claw = hardwareMap.get(Servo.class, "claw");
+        claw = hardwareMap.get(CRServo.class, "claw1");
+        claw2 = hardwareMap.get(CRServo.class, "claw2");
+        claw2.setDirection(CRServo.Direction.REVERSE);
+
         plane_launcher = hardwareMap.get(Servo.class, "launcher");
 
 
@@ -127,17 +126,24 @@ public class Driver_Controlled extends OpMode {
         }
         if (gamepad1.a) {
             intake = 1 - intake;
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            //try {
+                //Thread.sleep(500);
+            //} catch (InterruptedException e) {
+                //e.printStackTrace();
+            //}
         }
         if (gamepad1.left_bumper) {//Close?
-            claw.setPosition(0.50);
+            claw.setPower(0.50);
+            claw2.setPower(0.50);
         }
-        if (gamepad1.right_bumper) {//Open?----+
-            claw.setPosition(1.00);
+        else if (gamepad1.right_bumper) {//Open?----+
+            claw.setPower(-0.50);
+            claw2.setPower(-0.50);
+        }
+        else {
+            claw.setPower(0.00);
+            claw2.setPower(0.00);
+
         }
         intake_left.setPower(intake);
         intake_right.setPower(intake);
