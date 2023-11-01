@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
-@Autonomous(name="ByeByeBye", group="eric")
+@Autonomous(name="ByeByeBye1", group="eric")
 public class CopiedCode extends LinearOpMode {
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;

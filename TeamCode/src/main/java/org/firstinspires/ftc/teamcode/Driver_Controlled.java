@@ -43,9 +43,11 @@ public class Driver_Controlled extends OpMode {
         back_right   = hardwareMap.get(DcMotor.class, "rightRear");
         back_left.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        /*
         intake_left  = hardwareMap.get(DcMotor.class, "intakeLeft");
         intake_right = hardwareMap.get(DcMotor.class, "intakeRight");
         intake_left.setDirection(DcMotorSimple.Direction.REVERSE);
+        */
 
         claw = hardwareMap.get(CRServo.class, "claw1");
         claw2 = hardwareMap.get(CRServo.class, "claw2");
@@ -120,23 +122,16 @@ public class Driver_Controlled extends OpMode {
 
         // if x and y
         // button pressed then launch airplane
-        if (gamepad1.x && gamepad1.y) {
+        if (gamepad2.x && gamepad2.y) {
             plane_launcher.setPosition(180);
             plane_launcher.setPosition(0);
         }
-        if (gamepad1.a) {
-            intake = 1 - intake;
-            //try {
-                //Thread.sleep(500);
-            //} catch (InterruptedException e) {
-                //e.printStackTrace();
-            //}
-        }
-        if (gamepad1.left_bumper) {//Close?
+
+        if (gamepad2.left_bumper) {//Close?
             claw.setPower(0.50);
             claw2.setPower(0.50);
         }
-        else if (gamepad1.right_bumper) {//Open?----+
+        else if (gamepad2.right_bumper) {//Open?----+
             claw.setPower(-0.50);
             claw2.setPower(-0.50);
         }
