@@ -135,6 +135,6 @@ public class Driver_Controlled extends OpMode {
 
         }
 
-        lift.setPower(gamepad2.left_stick_y);
+        lift.setPower(gamepad2.left_stick_y / 2);
     }
 }
