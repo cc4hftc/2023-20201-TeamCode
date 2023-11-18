@@ -25,12 +25,10 @@ public class Driver_Controlled extends OpMode {
     private DcMotor front_right = null;
     private DcMotor back_left   = null;
     private DcMotor back_right  = null;
-    private DcMotor intake_left = null;
-    private DcMotor intake_right = null;
+    private DcMotor lift = null;
     private CRServo claw = null;
     private CRServo claw2 = null;
     private Servo plane_launcher = null;
-    private int intake = 0;
 
     @Override
     public void init() {
@@ -43,11 +41,7 @@ public class Driver_Controlled extends OpMode {
         back_right   = hardwareMap.get(DcMotor.class, "rightRear");
         back_left.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        /*
-        intake_left  = hardwareMap.get(DcMotor.class, "intakeLeft");
-        intake_right = hardwareMap.get(DcMotor.class, "intakeRight");
-        intake_left.setDirection(DcMotorSimple.Direction.REVERSE);
-        */
+        lift = hardwareMap.get(DcMotor.class, "lift");
 
         claw = hardwareMap.get(CRServo.class, "claw1");
         claw2 = hardwareMap.get(CRServo.class, "claw2");
@@ -104,8 +98,8 @@ public class Driver_Controlled extends OpMode {
         // Loop through all values in the speeds[] array and find the greatest
         // *magnitude*.  Not the greatest velocity.
         double max = Math.abs(speeds[0]);
-        for(int i = 0; i < speeds.length; i++) {
-            if ( max < Math.abs(speeds[i]) ) max = Math.abs(speeds[i]);
+        for (double speed : speeds) {
+            if (max < Math.abs(speed)) max = Math.abs(speed);
         }
 
         // If and only if the maximum is outside of the range we want it to be,
@@ -140,7 +134,7 @@ public class Driver_Controlled extends OpMode {
             claw2.setPower(0.00);
 
         }
-        intake_left.setPower(intake);
-        intake_right.setPower(intake);
+
+        lift.setPower(gamepad2.left_stick_y);
     }
 }
