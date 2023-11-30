@@ -132,16 +132,30 @@ public class Driver_Controlled extends OpMode {
         else {
             claw.setPower(0.00);
             claw2.setPower(0.00);
-
         }
 
-        lift.setPower(gamepad2.left_stick_y / 2);
 
         if (gamepad2.a) {
-            lift.setTargetPosition(90);
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift.setTargetPosition(lift.getCurrentPosition()+90);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift.setPower(0.8);
+            while (lift.isBusy()) {
+                lift.setPower(0.8);
+            }
+            lift.setPower(0.0);
+            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         if (gamepad2.b) {
-            lift.setTargetPosition(0);
+            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift.setTargetPosition(lift.getCurrentPosition()-90);
+            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lift.setPower(-0.4);
+            while (lift.isBusy()) {
+                lift.setPower(-0.4);
+            }
+            lift.setPower(0.0);
+            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
         telemetry.addData("Pos", lift.getCurrentPosition());
     }
