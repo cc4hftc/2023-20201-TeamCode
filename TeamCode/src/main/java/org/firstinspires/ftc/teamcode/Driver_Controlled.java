@@ -136,5 +136,13 @@ public class Driver_Controlled extends OpMode {
         }
 
         lift.setPower(gamepad2.left_stick_y / 2);
+
+        if (gamepad2.a) {
+            lift.setTargetPosition(90);
+        }
+        if (gamepad2.b) {
+            lift.setTargetPosition(0);
+        }
+        telemetry.addData("Pos", lift.getCurrentPosition());
     }
 }
