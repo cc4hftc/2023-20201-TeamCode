@@ -176,5 +176,6 @@ public class Driver_Controlled extends OpMode {
         lift.setPower(gamepad2.right_stick_y / 2);
 
         telemetry.addData("trig", (gamepad2.left_trigger > 0));
+        telemetry.addData("multi", multiplier);
     }
 }
