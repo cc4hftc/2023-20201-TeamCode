@@ -19,7 +19,7 @@ public class Quad_Tester extends LinearOpMode {
 
         // While the Op Mode is running, update the telemetry values.
         while (opModeIsActive()) {
-            telemetry.addData("Red", color.M);
+            telemetry.addData("Red", color.red());
             telemetry.addData("Green", color.green());
             telemetry.addData("Blue", color.blue());
             telemetry.update();

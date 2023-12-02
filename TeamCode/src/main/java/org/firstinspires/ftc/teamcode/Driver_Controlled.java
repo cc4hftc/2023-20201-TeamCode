@@ -121,13 +121,13 @@ public class Driver_Controlled extends OpMode {
             plane_launcher.setPosition(0);
         }
 
-        if (gamepad2.left_bumper) {//Close?
-            claw.setPower(0.50);
-            claw2.setPower(0.50);
+        if (gamepad2.a) {//Close?
+            claw.setPower(1.0);
+            claw2.setPower(1.0);
         }
-        else if (gamepad2.right_bumper) {//Open?----+
-            claw.setPower(-0.50);
-            claw2.setPower(-0.50);
+        else if (gamepad2.b) {//Open?----+
+            claw.setPower(-1.0);
+            claw2.setPower(-1.0);
         }
         else {
             claw.setPower(0.00);
@@ -135,24 +135,24 @@ public class Driver_Controlled extends OpMode {
         }
 
 
-        if (gamepad2.a) {
+        if (gamepad2.left_bumper) {
             lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift.setTargetPosition(lift.getCurrentPosition()+90);
+            lift.setTargetPosition(lift.getCurrentPosition()+480);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift.setPower(0.8);
+            lift.setPower(0.3);
             while (lift.isBusy()) {
-                lift.setPower(0.8);
+                lift.setPower(0.3);
             }
             lift.setPower(0.0);
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
-        if (gamepad2.b) {
+        if (gamepad2.right_bumper) {
             lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift.setTargetPosition(lift.getCurrentPosition()-90);
+            lift.setTargetPosition(lift.getCurrentPosition()-440);
             lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift.setPower(-0.4);
+            lift.setPower(-0.1);
             while (lift.isBusy()) {
-                lift.setPower(-0.4);
+                lift.setPower(-0.1);
             }
             lift.setPower(0.0);
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
