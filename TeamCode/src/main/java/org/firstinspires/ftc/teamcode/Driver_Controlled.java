@@ -30,7 +30,7 @@ public class Driver_Controlled extends OpMode {
     private CRServo claw2 = null;
     private Servo plane_launcher = null;
 
-    int multiplier;
+    double multiplier;
 
     @Override
     public void init() {
@@ -165,10 +165,10 @@ public class Driver_Controlled extends OpMode {
         }
 
         if (gamepad1.left_bumper) {
-            multiplier = multiplier / 2;
+            multiplier = 0.5;
         }
-        if (gamepad1.right_bumper) {
-            multiplier = multiplier * 2;
+        else {
+            multiplier = 1;
         }
 
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
