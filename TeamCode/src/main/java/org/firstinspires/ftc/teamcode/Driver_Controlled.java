@@ -30,6 +30,8 @@ public class Driver_Controlled extends OpMode {
     private CRServo claw2 = null;
     private Servo plane_launcher = null;
 
+    int multiplier;
+
     @Override
     public void init() {
 
@@ -49,7 +51,7 @@ public class Driver_Controlled extends OpMode {
 
         plane_launcher = hardwareMap.get(Servo.class, "launcher");
 
-
+        multiplier = 1;
 
     }
 
@@ -109,10 +111,10 @@ public class Driver_Controlled extends OpMode {
         }
 
         // apply the calculated values to the motors.
-        front_left.setPower(speeds[0]);
-        front_right.setPower(speeds[1]);
-        back_left.setPower(speeds[2]);
-        back_right.setPower(speeds[3]);
+        front_left.setPower(speeds[0] * multiplier);
+        front_right.setPower(speeds[1] * multiplier);
+        back_left.setPower(speeds[2] * multiplier);
+        back_right.setPower(speeds[3] * multiplier);
 
         // if x and y
         // button pressed then launch airplane
@@ -160,6 +162,13 @@ public class Driver_Controlled extends OpMode {
                 lift.setPower(0.0);
             }
             lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+
+        if (gamepad1.left_bumper) {
+            multiplier = multiplier / 2;
+        }
+        if (gamepad1.right_bumper) {
+            multiplier = multiplier * 2;
         }
 
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
