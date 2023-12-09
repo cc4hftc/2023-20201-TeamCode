@@ -44,16 +44,21 @@ public class CopiedCode extends LinearOpMode {
         telemetry.update();
         if (Ldistance.getDistance(DistanceUnit.CM)<=30){
             myTrajectory = drive.trajectoryBuilder(new Pose2d())
-                    .strafeLeft(3)
+                    .strafeLeft(1.5)
                     .build();
         } else if (Rdistance.getDistance(DistanceUnit.CM)<=30){
-            myTrajectory = drive.trajectoryBuilder(new Pose2d())
-                    .strafeRight(3)
+            myTrajectory = drive.trajectoryBuilder( new Pose2d())
+                    .strafeRight(1.5)
                     .build();
         } else{
             myTrajectory = drive.trajectoryBuilder(new Pose2d())
-                    .forward(3)
+                    .forward(1.5)
                     .build();
         }
         drive.followTrajectory(myTrajectory);
+        claw.setPower(1.0);
+        claw2.setPower(1.0);
+        sleep(3000);
+        claw.setPower(0.00);
+        claw2.setPower(0.00);
 }}
