@@ -108,7 +108,7 @@ public abstract class TestOpMode {
         throw new OpModeManagerImpl.ForceStopException();
     }
 
-    /**
+    /**r
      * Get the number of seconds this op mode has been running
      * <p>
      * This method has sub millisecond accuracy.

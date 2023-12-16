@@ -8,20 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
-@Autonomous(name="AintNothing", group="eric")
+@Autonomous(name="Turn90", group="eric")
 public class Double_Tester extends LinearOpMode {
     @Override
     public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())//Turns instead of strafes
-                .strafeRight(10)
-                .build();
-
-        waitForStart();
-
         if(isStopRequested()) return;
-
-        drive.followTrajectory(myTrajectory);
+        waitForStart();
+        drive.turn(Math.toRadians(7.5));
     }
 }
