@@ -26,6 +26,7 @@ public class Driver_Controlled extends OpMode {
     private DcMotor back_left   = null;
     private DcMotor back_right  = null;
     private DcMotor lift = null;
+    private DcMotor hang = null;
     private CRServo claw = null;
     private CRServo claw2 = null;
     private Servo plane_launcher = null;
@@ -44,6 +45,8 @@ public class Driver_Controlled extends OpMode {
         back_left.setDirection(DcMotorSimple.Direction.REVERSE);
 
         lift = hardwareMap.get(DcMotor.class, "lift");
+
+        hang = hardwareMap.get(DcMotor.class, "hang");
 
         claw = hardwareMap.get(CRServo.class, "claw1");
         claw2 = hardwareMap.get(CRServo.class, "claw2");
@@ -174,6 +177,10 @@ public class Driver_Controlled extends OpMode {
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         lift.setPower(gamepad2.right_stick_y / 2);
+
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        hang.setPower(gamepad2.left_stick_y);
 
         telemetry.addData("trig", (gamepad2.left_trigger > 0));
         telemetry.addData("multi", multiplier);
