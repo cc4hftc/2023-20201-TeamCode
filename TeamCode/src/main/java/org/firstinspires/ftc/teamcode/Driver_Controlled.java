@@ -180,7 +180,7 @@ public class Driver_Controlled extends OpMode {
 
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hang.setPower(-gamepad2.left_stick_y);
+        hang.setPower(gamepad2.left_stick_y);
 
         telemetry.addData("trig", (gamepad2.left_trigger > 0));
         telemetry.addData("multi", multiplier);
