@@ -139,34 +139,6 @@ public class Driver_Controlled extends OpMode {
             claw2.setPower(0.00);
         }
 
-
-        if (gamepad2.left_bumper) {
-            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift.setTargetPosition(lift.getCurrentPosition()+480);
-            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift.setPower(0.3);
-            if (lift.isBusy()) {
-                lift.setPower(0.3);
-            }
-            else {
-                lift.setPower(0.0);
-                lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            }
-        }
-        if (gamepad2.right_bumper) {
-            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift.setTargetPosition(lift.getCurrentPosition()-440);
-            lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            lift.setPower(-0.3);
-            if (lift.isBusy()) {
-                lift.setPower(-0.3);
-            }
-            else {
-                lift.setPower(0.0);
-            }
-            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
-
         if (gamepad1.left_bumper) {
             multiplier = 0.5;
         }
@@ -181,8 +153,5 @@ public class Driver_Controlled extends OpMode {
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         hang.setPower(-gamepad2.left_stick_y);
-
-        telemetry.addData("trig", (gamepad2.left_trigger > 0));
-        telemetry.addData("multi", multiplier);
     }
 }
