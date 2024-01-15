@@ -12,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 
-@Autonomous(name="Theoretical autonomous", group="eric")
-public class TheoreticalAuto extends LinearOpMode {
+@Autonomous(name="RedPArk", group="eric")
+public class Red_Park extends LinearOpMode {
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;
     private CRServo claw = null;
@@ -48,6 +48,9 @@ public class TheoreticalAuto extends LinearOpMode {
         Trajectory Go_To_Forward_tape=drive.trajectoryBuilder( new Pose2d())
                 .forward(Strt_to_TAPEForwardOnly-Strt_to_center)
                 .build();
+        Trajectory PARK=drive.trajectoryBuilder( new Pose2d())
+                .strafeRight(99)
+                .build();
         waitForStart();
 
         if (isStopRequested()) return;
@@ -75,4 +78,5 @@ public class TheoreticalAuto extends LinearOpMode {
        drive.followTrajectory(backwards_Tune);
         claw.setPower(0.00);
         claw2.setPower(0.00);
+        drive.followTrajectory(PARK);
 }}
