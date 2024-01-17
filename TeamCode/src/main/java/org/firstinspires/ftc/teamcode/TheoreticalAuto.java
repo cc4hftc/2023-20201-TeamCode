@@ -21,7 +21,7 @@ public class TheoreticalAuto extends LinearOpMode {
     private DcMotor lift = null;
     public int Strt_to_center=38+3;
     public int Rbot_width=18-8;
-    public int Center_to_tapeSIDE=11+7;
+    public int Center_to_tapeSIDE=11+9;
     public int Strt_to_TAPEForwardOnly=46+8;
     public int Colision_Tune_distance=4;
     @Override
@@ -35,6 +35,7 @@ public class TheoreticalAuto extends LinearOpMode {
         claw2 = hardwareMap.get(CRServo.class, "claw2");
         claw2.setDirection(CRServo.Direction.REVERSE);
         lift = hardwareMap.get(DcMotor.class, "lift");
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         Trajectory Drive_to_center = drive.trajectoryBuilder(new Pose2d())
                 .forward((Strt_to_center-Rbot_width))
@@ -46,7 +47,10 @@ public class TheoreticalAuto extends LinearOpMode {
                 .strafeRight(Center_to_tapeSIDE)
                 .build();
         Trajectory Go_To_Forward_tape=drive.trajectoryBuilder( new Pose2d())
-                .forward(Strt_to_TAPEForwardOnly-Strt_to_center)
+                .forward(14)
+                .build();
+        Trajectory Go_Back_Forward_tape=drive.trajectoryBuilder( new Pose2d())
+                .back(12)
                 .build();
         waitForStart();
 
@@ -54,24 +58,40 @@ public class TheoreticalAuto extends LinearOpMode {
         Trajectory backwards_Tune = drive.trajectoryBuilder(new Pose2d())
                 .back(Colision_Tune_distance)
                 .build();
+
         drive.followTrajectory(Drive_to_center);
+
         telemetry.addData("Rdistance: ",Rdistance.getDistance(DistanceUnit.CM));
         telemetry.update();
        if (Ldistance.getDistance(DistanceUnit.CM)<=30){
+           lift.setPower(1.0);
+           sleep(2000);
+           lift.setPower(0.0);
+           sleep(1000);
            drive.followTrajectory(backwards_Tune);
            drive.followTrajectory(SideShiftLeft);
            claw.setPower(1.0);
            claw2.setPower(1.0);
         } else if (Rdistance.getDistance(DistanceUnit.CM)<=30) {
+           lift.setPower(1.0);
+           sleep(2000);
+           lift.setPower(0.0);
+           sleep(1000);
            drive.followTrajectory(backwards_Tune);
            drive.followTrajectory(SideShiftRight);
            claw.setPower(1.0);
            claw2.setPower(1.0);
        } else{
+           drive.followTrajectory(Go_Back_Forward_tape);
+           lift.setPower(1.0);
+           sleep(2000);
+           lift.setPower(0.0);
+           sleep(1000);
+           drive.followTrajectory(Go_To_Forward_tape);
            claw.setPower(1.0);
            claw2.setPower(1.0);
        }
-        sleep(3000);
+        sleep(2000);
        drive.followTrajectory(backwards_Tune);
         claw.setPower(0.00);
         claw2.setPower(0.00);
