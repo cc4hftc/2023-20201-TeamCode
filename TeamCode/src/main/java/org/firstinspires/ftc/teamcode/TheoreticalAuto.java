@@ -23,7 +23,7 @@ public class TheoreticalAuto extends LinearOpMode {
     public int Rbot_width=18-8;
     public int Center_to_tapeSIDE=11+9;
     public int Strt_to_TAPEForwardOnly=46+8;
-    public int Colision_Tune_distance=4+2;
+    public int Colision_Tune_distance=4+4;
     @Override
     public void runOpMode() {
 
