@@ -23,7 +23,7 @@ public class Blue_Park extends LinearOpMode {
     public int Rbot_width=18-8;
     public int Center_to_tapeSIDE=11+9;
     public int Strt_to_TAPEForwardOnly=46+8;
-    public int Colision_Tune_distance=4;
+    public int Colision_Tune_distance=4+2;
     @Override
     public void runOpMode() {
 
@@ -64,8 +64,8 @@ public class Blue_Park extends LinearOpMode {
         drive.followTrajectory(Drive_to_center);
 
         if (Ldistance.getDistance(DistanceUnit.CM)<=30){
-            lift.setPower(1.0);
-            sleep(2000);
+            lift.setPower(0.5);
+            sleep(3500);
             lift.setPower(0.0);
             sleep(1000);
             drive.followTrajectory(backwards_Tune);
@@ -73,8 +73,8 @@ public class Blue_Park extends LinearOpMode {
             claw.setPower(1.0);
             claw2.setPower(1.0);
         } else if (Rdistance.getDistance(DistanceUnit.CM)<=30) {
-            lift.setPower(1.0);
-            sleep(2000);
+            lift.setPower(0.5);
+            sleep(3500);
             lift.setPower(0.0);
             sleep(1000);
             drive.followTrajectory(backwards_Tune);
@@ -83,8 +83,8 @@ public class Blue_Park extends LinearOpMode {
             claw2.setPower(1.0);
         } else{
             drive.followTrajectory(Go_Back_Forward_tape);
-            lift.setPower(1.0);
-            sleep(2000);
+            lift.setPower(0.5);
+            sleep(3500);
             lift.setPower(0.0);
             sleep(1000);
             drive.followTrajectory(Go_To_Forward_tape);
