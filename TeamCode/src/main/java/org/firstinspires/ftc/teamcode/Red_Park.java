@@ -23,7 +23,7 @@ public class Red_Park extends LinearOpMode {
     public int Rbot_width=18-8;
     public int Center_to_tapeSIDE=11+9;
     public int Strt_to_TAPEForwardOnly=46+8;
-    public int Colision_Tune_distance=4+2;
+    public int Colision_Tune_distance=4+3;//if doesn't work try 4,5,6...
     @Override
     public void runOpMode() {
 
