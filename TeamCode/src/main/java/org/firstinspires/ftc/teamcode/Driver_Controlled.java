@@ -1,8 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.round;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -14,6 +22,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
  * @author Brandon Gong
  */
 @TeleOp(name="Duck's Mecanum Drive", group="Iterative Opmode")
+@Config
 public class Driver_Controlled extends OpMode {
     /*
      * The mecanum drivetrain involves four separate motors that spin in
@@ -25,13 +34,23 @@ public class Driver_Controlled extends OpMode {
     private DcMotor front_right = null;
     private DcMotor back_left   = null;
     private DcMotor back_right  = null;
-    private DcMotor lift = null;
+    private DcMotorEx lift = null;
     private DcMotor hang = null;
     private CRServo claw = null;
     private CRServo claw2 = null;
     private Servo plane_launcher = null;
-
+    double POWER = 0;
     double multiplier;
+
+    private PIDFController controller;
+
+    public static double p = 2, i = 0, d = 0.002;
+    public static double f = 0.002;
+
+    public static int target = 0;//good to go
+    private final double ticks_in_degree = 28.0 / 360.0;
+
+    public static double armmult;
 
     @Override
     public void init() {
@@ -44,7 +63,7 @@ public class Driver_Controlled extends OpMode {
         back_right   = hardwareMap.get(DcMotor.class, "rightRear");
         back_left.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        lift = hardwareMap.get(DcMotor.class, "lift");
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
 
         hang = hardwareMap.get(DcMotor.class, "hang");
 
@@ -56,6 +75,14 @@ public class Driver_Controlled extends OpMode {
 
         multiplier = 1;
 
+        controller = new PIDFController(p,i,d,f);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        lift = hardwareMap.get(DcMotorEx.class, "lift");
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        target = lift.getCurrentPosition();
+
+        armmult = 25;
     }
 
     @Override
@@ -102,9 +129,9 @@ public class Driver_Controlled extends OpMode {
 
         // Loop through all values in the speeds[] array and find the greatest
         // *magnitude*.  Not the greatest velocity.
-        double max = Math.abs(speeds[0]);
+        double max = abs(speeds[0]);
         for (double speed : speeds) {
-            if (max < Math.abs(speed)) max = Math.abs(speed);
+            if (max < abs(speed)) max = abs(speed);
         }
 
         // If and only if the maximum is outside of the range we want it to be,
@@ -146,12 +173,28 @@ public class Driver_Controlled extends OpMode {
             multiplier = 1;
         }
 
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        target += gamepad2.left_stick_y * armmult;
 
-        lift.setPower(gamepad2.right_stick_y / 2);
+        if (target > 0) {
+            target = 0;
+        }
 
+        hang.setPower(gamepad2.right_stick_y);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        hang.setPower(-gamepad2.left_stick_y);
+        controller.setPIDF(p,i,d,f);
+        int armPos = lift.getCurrentPosition();
+        double pid = controller.calculate(armPos, target);
+
+        lift.setVelocity(pid);
+
+
+        telemetry.addData("f", f);
+        telemetry.addData("pid", pid);
+        telemetry.addData("pos", armPos);
+        telemetry.addData("target", target);
+        telemetry.addData("stick", gamepad2.right_stick_y);
+        telemetry.addData("armmult", armmult);
+        telemetry.update();
     }
 }

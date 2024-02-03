@@ -33,7 +33,6 @@ public class  Triple_Tester extends LinearOpMode {
 
         if(isStopRequested()) return;
 
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setTargetPosition(lift.getCurrentPosition()-440);
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         lift.setPower(-0.1);
