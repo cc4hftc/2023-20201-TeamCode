@@ -82,7 +82,7 @@ public class Driver_Controlled extends OpMode {
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         target = lift.getCurrentPosition();
 
-        armmult = 25;
+        armmult = 8;
     }
 
     @Override
