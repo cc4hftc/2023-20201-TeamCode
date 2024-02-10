@@ -44,7 +44,7 @@ public class Driver_Controlled extends OpMode {
 
     private PIDFController controller;
 
-    public static double p = 2, i = 0, d = 0.002;
+    public static double p = 12, i = 0, d = 0.002;
     public static double f = 0.002;
 
     public static int target = 0;//good to go
@@ -150,6 +150,7 @@ public class Driver_Controlled extends OpMode {
         // button pressed then launch airplane
         if (gamepad2.x && gamepad2.y) {
             plane_launcher.setPosition(180);
+            try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
             plane_launcher.setPosition(0);
         }
 
