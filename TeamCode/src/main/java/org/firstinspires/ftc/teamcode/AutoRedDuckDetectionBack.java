@@ -12,10 +12,14 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import java.util.List;
 
@@ -91,24 +95,81 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
         initDoubleVision();
         visionPortal.setProcessorEnabled(aprilTag, false);
 
-//        Trajectory Drive_to_center = drive.trajectoryBuilder(new Pose2d())
-//                .forward((Strt_to_center-Rbot_width) )
-//                .build();
-//        Trajectory SideShiftLeft = drive.trajectoryBuilder(new Pose2d())
-//                .strafeLeft(Center_to_tapeSIDE)
-//                .build();
-//        Trajectory SideShiftRight= drive.trajectoryBuilder( new Pose2d())
-//                .strafeRight(Center_to_tapeSIDE)
-//                .build();
-//        Trajectory Go_To_Forward_tape=drive.trajectoryBuilder( new Pose2d())
-//                .forward(14)
-//                .build();
-//        Trajectory Go_Back_Forward_tape=drive.trajectoryBuilder( new Pose2d())
-//                .back(12)
-//                .build();
-//        Trajectory PARK=drive.trajectoryBuilder( new Pose2d())
-//                .strafeRight(99)
-//                .build();
+        Pose2d startingPose = DucksTrajectories.redBackStartingPose;
+        drive.setPoseEstimate(startingPose);
+
+        TrajectorySequence redBackLeftTrajSeq =
+                drive.trajectorySequenceBuilder(startingPose)
+                        .splineTo(DucksTrajectories.redBackLeftLine.vec(),
+                                DucksTrajectories.redBackLeftLine.getHeading())
+                        .addDisplacementMarker(() -> {
+                            claw1.setPower(1.0);
+                            claw2.setPower(1.0);
+                            sleep(2500);
+                            claw1.setPower(0.0);
+                            claw2.setPower(0.0);
+                        })
+                        .lineToConstantHeading(
+                                DucksTrajectories.redBackStartingPose.plus(
+                                        DucksTrajectories.redStartingPoseReturnOffset).vec())
+                        .waitSeconds(2.0)
+                        .lineToConstantHeading(
+                                DucksTrajectories.redBackStageWaypoint.vec())
+                        .lineToSplineHeading(DucksTrajectories.redBackdropLeft)
+                        .lineToSplineHeading(
+                                DucksTrajectories.redBackdropLeftParkWaypoint)
+                        .splineToLinearHeading(
+                                DucksTrajectories.redBackdropLeftPark,
+                                DucksTrajectories.redBackdropLeftPark.getHeading())
+                        .build();
+
+        TrajectorySequence redBackCenterTrajSeq =
+                drive.trajectorySequenceBuilder(startingPose)
+                        .lineToSplineHeading(
+                                DucksTrajectories.redBackCenterLine)
+                        .addDisplacementMarker(() -> {
+                            claw1.setPower(1.0);
+                            claw2.setPower(1.0);
+                            sleep(2500);
+                            claw1.setPower(0.0);
+                            claw2.setPower(0.0);
+                        })
+                        .lineToSplineHeading(
+                                DucksTrajectories.redBackStartingPose.plus(
+                                        DucksTrajectories.redStartingPoseReturnOffset))
+                        .lineToSplineHeading(DucksTrajectories.redBackStageWaypoint)
+                        .waitSeconds(0.5)
+                        .lineToSplineHeading(DucksTrajectories.redBackdropCenter)
+                        .waitSeconds(0.5)
+                        .lineToSplineHeading(DucksTrajectories.redBackdropLeftParkWaypoint)
+                        .splineToLinearHeading(
+                                DucksTrajectories.redBackdropLeftPark,
+                                DucksTrajectories.redBackdropLeftPark.getHeading())
+                        .build();
+
+        TrajectorySequence redBackRightTrajSeq =
+                drive.trajectorySequenceBuilder(startingPose)
+                        .lineToSplineHeading(
+                                DucksTrajectories.redBackRightLine)
+                        .addDisplacementMarker(() -> {
+                            claw1.setPower(1.0);
+                            claw2.setPower(1.0);
+                            sleep(2500);
+                            claw1.setPower(0.0);
+                            claw2.setPower(0.0);
+                        })
+                        .lineToSplineHeading(
+                                DucksTrajectories.redBackStartingPose.plus(
+                                        DucksTrajectories.redStartingPoseReturnOffset))
+                        .lineToSplineHeading(DucksTrajectories.redBackStageWaypoint)
+                        .waitSeconds(0.5)
+                        .lineToSplineHeading(DucksTrajectories.redBackdropRight)
+                        .waitSeconds(0.5)
+                        .lineToSplineHeading(DucksTrajectories.redBackdropLeftParkWaypoint)
+                        .splineToLinearHeading(
+                                DucksTrajectories.redBackdropLeftPark,
+                                DucksTrajectories.redBackdropLeftPark.getHeading())
+                        .build();
 
         waitForStart();
 
@@ -152,46 +213,15 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
         // Save more CPU resources when camera is no longer needed.
         visionPortal.close();
 
-//        if (isStopRequested()) return;
-//        Trajectory backwards_Tune = drive.trajectoryBuilder(new Pose2d())
-//                .back(Colision_Tune_distance)
-//                .build();
-//
-//        drive.followTrajectory(Drive_to_center);
-//
-//        if (Ldistance.getDistance(DistanceUnit.CM)<=30){
-//            lift.setPower(0.5);
-//            sleep(3500);
-//            lift.setPower(0.0);
-//            sleep(1000);
-//            drive.followTrajectory(backwards_Tune);
-//            drive.followTrajectory(SideShiftLeft);
-//            claw1.setPower(1.0);
-//            claw2.setPower(1.0);
-//        } else if (Rdistance.getDistance(DistanceUnit.CM)<=30) {
-//            lift.setPower(0.5);
-//            sleep(3500);
-//            lift.setPower(0.0);
-//            sleep(1000);
-//            drive.followTrajectory(backwards_Tune);
-//            drive.followTrajectory(SideShiftRight);
-//            claw1.setPower(1.0);
-//            claw2.setPower(1.0);
-//        } else{
-//            drive.followTrajectory(Go_Back_Forward_tape);
-//            lift.setPower(0.5);
-//            sleep(3500);
-//            lift.setPower(0.0);
-//            sleep(1000);
-//            drive.followTrajectory(Go_To_Forward_tape);
-//            claw1.setPower(1.0);
-//            claw2.setPower(1.0);
-//        }
-//        sleep(3000);
-//       drive.followTrajectory(backwards_Tune);
-//        claw1.setPower(0.00);
-//        claw2.setPower(0.00);
-//        drive.followTrajectory(PARK);
+        if (isStopRequested()) return;
+
+        if ( spikeMark == 1 ) {
+            drive.followTrajectorySequence(redBackLeftTrajSeq);
+        } else if ( spikeMark == 2 ) {
+            drive.followTrajectorySequence(redBackCenterTrajSeq);
+        } else if ( spikeMark == 3 ) {
+            drive.followTrajectorySequence(redBackRightTrajSeq);
+        }
 
 
     } // end runOpMode()
