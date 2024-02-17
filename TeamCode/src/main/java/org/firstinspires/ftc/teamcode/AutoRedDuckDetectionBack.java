@@ -24,7 +24,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import java.util.List;
 
 
-@Autonomous(name="Red Backstage Duck Detect", group="DucksAuto")
+@Autonomous(name="Auto Red Duck Detect", group="DucksAuto")
 public class AutoRedDuckDetectionBack extends LinearOpMode {
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;
@@ -124,9 +124,8 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
                         .build();
 
         TrajectorySequence redBackCenterTrajSeq =
-                drive.trajectorySequenceBuilder(startingPose)
-                        .lineToSplineHeading(
-                                DucksTrajectories.redBackCenterLine)
+                drive.trajectorySequenceBuilder(DucksTrajectories.redBackStartingPose)
+                        .forward(26)
                         .addDisplacementMarker(() -> {
                             claw1.setPower(1.0);
                             claw2.setPower(1.0);
@@ -134,17 +133,12 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
                             claw1.setPower(0.0);
                             claw2.setPower(0.0);
                         })
-                        .lineToSplineHeading(
-                                DucksTrajectories.redBackStartingPose.plus(
-                                        DucksTrajectories.redStartingPoseReturnOffset))
-                        .lineToSplineHeading(DucksTrajectories.redBackStageWaypoint)
-                        .waitSeconds(0.5)
-                        .lineToSplineHeading(DucksTrajectories.redBackdropCenter)
-                        .waitSeconds(0.5)
-                        .lineToSplineHeading(DucksTrajectories.redBackdropLeftParkWaypoint)
-                        .splineToLinearHeading(
-                                DucksTrajectories.redBackdropLeftPark,
-                                DucksTrajectories.redBackdropLeftPark.getHeading())
+                        //.splineTo(DucksTrajectories.redBackdropCenter.vec(), DucksTrajectories.redBackdropCenter.getHeading())
+//                        .waitSeconds(0.5)
+//                        .lineToSplineHeading(DucksTrajectories.redBackdropLeftParkWaypoint)
+//                        .splineToLinearHeading(
+//                                DucksTrajectories.redBackdropLeftPark,
+//                                DucksTrajectories.redBackdropLeftPark.getHeading())
                         .build();
 
         TrajectorySequence redBackRightTrajSeq =
@@ -218,7 +212,28 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
         if ( spikeMark == 1 ) {
             drive.followTrajectorySequence(redBackLeftTrajSeq);
         } else if ( spikeMark == 2 ) {
-            drive.followTrajectorySequence(redBackCenterTrajSeq);
+            //drive.followTrajectorySequence(redBackCenterTrajSeq);
+            drive.followTrajectory(
+                    drive.trajectoryBuilder(DucksTrajectories.redBackStartingPose)
+                            .lineToSplineHeading(
+                                    DucksTrajectories.redBackCenterLine)
+                                    .build()
+            );
+            claw1.setPower(1.0);
+            claw2.setPower(1.0);
+            sleep(2500);
+            claw1.setPower(0.0);
+            claw2.setPower(0.0);
+            drive.followTrajectory(
+                    drive.trajectoryBuilder(DucksTrajectories.redBackStartingPose)
+                            .splineTo(DucksTrajectories.redBackdropCenter.vec(), DucksTrajectories.redBackdropCenter.getHeading())
+                            //.waitSeconds(0.5)
+//                            .lineToSplineHeading(DucksTrajectories.redBackdropLeftParkWaypoint)
+//                            .splineToLinearHeading(
+//                                DucksTrajectories.redBackdropLeftPark,
+//                                DucksTrajectories.redBackdropLeftPark.getHeading())
+                            .build()
+            );
         } else if ( spikeMark == 3 ) {
             drive.followTrajectorySequence(redBackRightTrajSeq);
         }
