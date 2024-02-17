@@ -1,28 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import android.util.Size;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
-import org.firstinspires.ftc.vision.tfod.TfodProcessor;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
 
 @Autonomous(name="Red Backstage Duck Detect", group="DucksAuto")
-public class AutoRedDuckDetection extends LinearOpMode {
+public class AutoRedDuckDetectionBack extends LinearOpMode {
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;
     private CRServo claw1 = null;
@@ -42,6 +41,14 @@ public class AutoRedDuckDetection extends LinearOpMode {
             "duckprop",
     };
 
+    // Camera resolution
+    private static final int CAMHORIZRES = 640;
+    private static final int CAMVERTRES = 480;
+
+    // Duck Spike Mark Detection Thresholds
+    private static final int  LEFTSPIKETHRESHOLD = 200;
+    private static final int  RIGHTSPIKETHRESHOLD = 440;
+
     /**
      * The variable to store our instance of the AprilTag processor.
      */
@@ -58,9 +65,9 @@ public class AutoRedDuckDetection extends LinearOpMode {
     private float tfodMinConfidence = 0.92f;
 
     /**
-     * The variable to store the location of the prop (0=>left, 1=>center, 2=>right)
+     * The variable to store the location of the prop (1=>left, 2=>center, 3=>right)
      */
-    private int randomizationLocation;
+    private int spikeMark = 0;
 
     /**
      * The variable to store our instance of the vision portal.
@@ -107,28 +114,33 @@ public class AutoRedDuckDetection extends LinearOpMode {
 
         if (opModeIsActive()) {
             int iterations = 1;
-            while ( iterations < 400 ) {
+            boolean propFound = false;
+            while ( iterations < 4000 && spikeMark == 0 ) {
+                //while ( opModeIsActive() ) {
                 List<Recognition> currentRecognitions = tfod.getRecognitions();
-                if ( currentRecognitions.size() > 1 ) {
-                    Recognition recognition = currentRecognitions.get(0);
+                for ( Recognition recognition : currentRecognitions ) {
                     double x = (recognition.getLeft() + recognition.getRight()) / 2;
-                    if ( x <= 220 ) {
+
+                    if ( x <= LEFTSPIKETHRESHOLD ) {
                         telemetry.addData("Prop Location", "Left");
                         telemetry.update();
-                        randomizationLocation = 1;
-                        visionPortal.setProcessorEnabled(tfod, false);
+                        propFound = true;
+                        spikeMark = 1;
+                        //visionPortal.setProcessorEnabled(tfod, false);
                         break;
-                    } else if ( x > 220 && x <= 420 ) {
+                    } else if ( x > LEFTSPIKETHRESHOLD && x <= RIGHTSPIKETHRESHOLD ) {
                         telemetry.addData("Prop Location", "Center");
                         telemetry.update();
-                        randomizationLocation = 2;
-                        visionPortal.setProcessorEnabled(tfod, false);
+                        propFound = true;
+                        spikeMark = 2;
+                        //visionPortal.setProcessorEnabled(tfod, false);
                         break;
-                    } else if ( x > 420 ) {
+                    } else if ( x > RIGHTSPIKETHRESHOLD ) {
                         telemetry.addData("Prop Location", "Right");
                         telemetry.update();
-                        randomizationLocation = 3;
-                        visionPortal.setProcessorEnabled(tfod, false);
+                        propFound = true;
+                        spikeMark = 3;
+                        //visionPortal.setProcessorEnabled(tfod, false);
                         break;
                     }
                 }
@@ -136,6 +148,9 @@ public class AutoRedDuckDetection extends LinearOpMode {
                 iterations++;
             }
         }
+
+        // Save more CPU resources when camera is no longer needed.
+        visionPortal.close();
 
 //        if (isStopRequested()) return;
 //        Trajectory backwards_Tune = drive.trajectoryBuilder(new Pose2d())
@@ -178,8 +193,6 @@ public class AutoRedDuckDetection extends LinearOpMode {
 //        claw2.setPower(0.00);
 //        drive.followTrajectory(PARK);
 
-        // Save more CPU resources when camera is no longer needed.
-        visionPortal.close();
 
     } // end runOpMode()
 
@@ -223,7 +236,7 @@ public class AutoRedDuckDetection extends LinearOpMode {
         }
 
         // Choose a camera resolution. Not all cameras support all resolutions.
-        //builder.setCameraResolution(new Size(640, 480));
+        builder.setCameraResolution(new Size(CAMHORIZRES, CAMVERTRES));
 
         // Enable the RC preview (LiveView).  Set "false" to omit camera monitoring.
         //builder.enableLiveView(true);
@@ -269,6 +282,18 @@ public class AutoRedDuckDetection extends LinearOpMode {
 
     }   // end method telemetryAprilTag()
 
+    private String getPropLocation( double x ) {
+        if ( x <= LEFTSPIKETHRESHOLD ) {
+            return "Left";
+        } else if ( x > LEFTSPIKETHRESHOLD && x <= RIGHTSPIKETHRESHOLD ) {
+            return "Center";
+        } else if ( x > RIGHTSPIKETHRESHOLD ) {
+            return "Right";
+        } else {
+            return "Unknown";
+        }
+    }
+
     /**
      * Add telemetry about TensorFlow Object Detection (TFOD) recognitions.
      */
@@ -284,7 +309,7 @@ public class AutoRedDuckDetection extends LinearOpMode {
 
             telemetry.addData(""," ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
-            telemetry.addData("- Position", "%.0f / %.0f", x, y);
+            telemetry.addData("- Position", "%.0f / %.0f", x, y, getPropLocation(x));
             telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
         }   // end for() loop
 
