@@ -88,16 +88,11 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(redFrontStartingPose)
                                 .lineToSplineHeading(redFrontLeftLine)
-                                .waitSeconds(1.5)
-                                .lineToSplineHeading(
-                                        redFrontStartingPose.plus(redStartingPoseReturnOffset))
-                                .waitSeconds(frontStageRobotBackdropDelay)
-                                .lineToSplineHeading(redBackStageWaypoint)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropLeft)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropRightParkWaypoint)
-                                .splineToLinearHeading(redBackdropRightPark, redBackdropRightPark.getHeading())
+                                .waitSeconds(2.5)
+                                .strafeRight(12)
+                                .forward(29)
+                                .turn(Math.toRadians(-90))
+                                .forward(94)
                                 .build()
                 );
 
@@ -109,16 +104,12 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(redFrontStartingPose)
                                 .lineToSplineHeading(redFrontCenterLine)
-                                .waitSeconds(1.5)
-                                .lineToSplineHeading(
-                                        redFrontStartingPose.plus(redStartingPoseReturnOffset))
-                                .waitSeconds(frontStageRobotBackdropDelay)
-                                .lineToSplineHeading(redBackStageWaypoint)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropCenter)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropRightParkWaypoint)
-                                .splineToLinearHeading(redBackdropRightPark, redBackdropRightPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(6)
+                                .strafeLeft(16)
+                                .forward(30)
+                                .turn(Math.toRadians(-90))
+                                .forward(112)
                                 .build()
                 );
 
@@ -130,16 +121,10 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(redFrontStartingPose)
                                 .splineTo(redFrontRightLine.vec(), redFrontRightLine.getHeading())
-                                .waitSeconds(1.5)
-                                .lineToConstantHeading(
-                                        redFrontStartingPose.plus(redStartingPoseReturnOffset).vec())
-                                .waitSeconds(frontStageRobotBackdropDelay)
-                                .lineToConstantHeading(redBackStageWaypoint.vec())
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropRight)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropRightParkWaypoint)
-                                .splineToLinearHeading(redBackdropRightPark, redBackdropRightPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(8)
+                                .strafeLeft(22)
+                                .forward(104)
                                 .build()
                 );
 
@@ -151,16 +136,11 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(redBackStartingPose)
                                 .splineTo(redBackLeftLine.vec(), redBackLeftLine.getHeading())
-                                .waitSeconds(1.5)
-                                .lineToConstantHeading(
-                                        redBackStartingPose.plus(redStartingPoseReturnOffset).vec())
-                                .waitSeconds(backStageRobotBackdropDelay)
-                                .lineToConstantHeading(redBackStageWaypoint.vec())
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropLeft)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropLeftParkWaypoint)
-                                .splineToLinearHeading(redBackdropLeftPark, redBackdropLeftPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(12)
+                                .turn(Math.toRadians(180))
+                                .strafeRight(28)
+                                .forward(32)
                                 .build()
                 );
 
@@ -173,16 +153,11 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(redBackStartingPose)
                                 .lineToSplineHeading(redBackCenterLine)
-                                .waitSeconds(1.5)
-                                .lineToSplineHeading(
-                                        redBackStartingPose.plus(redStartingPoseReturnOffset))
-                                .waitSeconds(backStageRobotBackdropDelay)
-                                .lineToSplineHeading(redBackStageWaypoint)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropCenter)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropLeftParkWaypoint)
-                                .splineToLinearHeading(redBackdropLeftPark, redBackdropLeftPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(12)
+                                .turn(Math.toRadians(-90))
+                                .strafeRight(10)
+                                .forward(46)
                                 .build()
                 );
 
@@ -194,16 +169,11 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(redBackStartingPose)
                                 .lineToSplineHeading(redBackRightLine)
-                                .waitSeconds(1.5)
-                                .lineToSplineHeading(
-                                        redBackStartingPose.plus(redStartingPoseReturnOffset))
-                                .waitSeconds(backStageRobotBackdropDelay)
-                                .lineToSplineHeading(redBackStageWaypoint)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropRight)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(redBackdropLeftParkWaypoint)
-                                .splineToLinearHeading(redBackdropLeftPark, redBackdropLeftPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(12)
+                                .turn(Math.toRadians(-90))
+                                .strafeRight(8)
+                                .forward(36)
                                 .build()
                 );
 
@@ -215,16 +185,10 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(blueFrontStartingPose)
                                 .splineTo(blueFrontLeftLine.vec(), blueFrontLeftLine.getHeading())
-                                .waitSeconds(1.5)
-                                .lineToConstantHeading(
-                                        blueFrontStartingPose.plus(blueStartingPoseReturnOffset).vec())
-                                .waitSeconds(frontStageRobotBackdropDelay)
-                                .lineToConstantHeading(blueBackStageWaypoint.vec())
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropLeft)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropLeftParkWaypoint)
-                                .splineToLinearHeading(blueBackdropLeftPark, blueBackdropLeftPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(8)
+                                .strafeRight(22)
+                                .forward(104)
                                 .build()
                 );
 
@@ -236,16 +200,12 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(blueFrontStartingPose)
                                 .lineToSplineHeading(blueFrontCenterLine)
-                                .waitSeconds(1.5)
-                                .lineToSplineHeading(
-                                        blueFrontStartingPose.plus(blueStartingPoseReturnOffset))
-                                .waitSeconds(frontStageRobotBackdropDelay)
-                                .lineToSplineHeading(blueBackStageWaypoint)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropCenter)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropLeftParkWaypoint)
-                                .splineToLinearHeading(blueBackdropLeftPark, blueBackdropLeftPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(6)
+                                .strafeRight(16)
+                                .forward(30)
+                                .turn(Math.toRadians(90))
+                                .forward(112)
                                 .build()
                 );
 
@@ -257,16 +217,11 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(blueFrontStartingPose)
                                 .lineToSplineHeading(blueFrontRightLine)
-                                .waitSeconds(1.5)
-                                .lineToConstantHeading(
-                                        blueFrontStartingPose.plus(blueStartingPoseReturnOffset).vec())
-                                .waitSeconds(frontStageRobotBackdropDelay)
-                                .lineToConstantHeading(blueBackStageWaypoint.vec())
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropRight)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropLeftParkWaypoint)
-                                .splineToLinearHeading(blueBackdropLeftPark, blueBackdropLeftPark.getHeading())
+                                .waitSeconds(2.5)
+                                .strafeLeft(12)
+                                .forward(29)
+                                .turn(Math.toRadians(90))
+                                .forward(94)
                                 .build()
                 );
 
@@ -278,16 +233,11 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(blueBackStartingPose)
                                 .lineToSplineHeading(blueBackLeftLine)
-                                .waitSeconds(1.5)
-                                .lineToConstantHeading(
-                                        blueBackStartingPose.plus(blueStartingPoseReturnOffset).vec())
-                                .waitSeconds(backStageRobotBackdropDelay)
-                                .lineToConstantHeading(blueBackStageWaypoint.vec())
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropLeft)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropRightParkWaypoint)
-                                .splineToLinearHeading(blueBackdropRightPark, blueBackdropRightPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(12)
+                                .turn(Math.toRadians(90))
+                                .strafeLeft(8)
+                                .forward(36)
                                 .build()
                 );
 
@@ -300,16 +250,11 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(blueBackStartingPose)
                                 .lineToSplineHeading(blueBackCenterLine)
-                                .waitSeconds(1.5)
-                                .lineToSplineHeading(
-                                        blueBackStartingPose.plus(blueStartingPoseReturnOffset))
-                                .waitSeconds(backStageRobotBackdropDelay)
-                                .lineToSplineHeading(blueBackStageWaypoint)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropCenter)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropRightParkWaypoint)
-                                .splineToLinearHeading(blueBackdropRightPark, blueBackdropRightPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(12)
+                                .turn(Math.toRadians(90))
+                                .strafeLeft(10)
+                                .forward(46)
                                 .build()
                 );
 
@@ -321,16 +266,11 @@ public class DucksMeepMeep {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(blueBackStartingPose)
                                 .splineTo(blueBackRightLine.vec(), blueBackRightLine.getHeading())
-                                .waitSeconds(1.5)
-                                .lineToConstantHeading(
-                                        blueBackStartingPose.plus(blueStartingPoseReturnOffset).vec())
-                                .waitSeconds(backStageRobotBackdropDelay)
-                                .lineToConstantHeading(blueBackStageWaypoint.vec())
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropRight)
-                                .waitSeconds(0.5)
-                                .lineToSplineHeading(blueBackdropRightParkWaypoint)
-                                .splineToLinearHeading(blueBackdropRightPark, blueBackdropRightPark.getHeading())
+                                .waitSeconds(2.5)
+                                .back(12)
+                                .turn(Math.toRadians(-180))
+                                .strafeLeft(28)
+                                .forward(32)
                                 .build()
                 );
 
@@ -346,14 +286,14 @@ public class DucksMeepMeep {
                 //.addEntity(blueFrontLeftBot)
                 // Randomized to center line
                 //.addEntity(redBackCenterBot)
-                //.addEntity(redFrontCenterBot)
+                .addEntity(redFrontCenterBot)
                 //.addEntity(blueBackCenterBot)
-                //.addEntity(blueFrontCenterBot)
+                .addEntity(blueFrontCenterBot)
                 // Randomized to right line
-                .addEntity(redBackRightBot)
-                .addEntity(redFrontRightBot)
-                .addEntity(blueBackRightBot)
-                .addEntity(blueFrontRightBot)
+                //.addEntity(redBackRightBot)
+                //.addEntity(redFrontRightBot)
+                //.addEntity(blueBackRightBot)
+                //.addEntity(blueFrontRightBot)
                 .start();
     }
 }
