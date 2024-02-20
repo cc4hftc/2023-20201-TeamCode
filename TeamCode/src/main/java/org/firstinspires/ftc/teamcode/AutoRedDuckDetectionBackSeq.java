@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.util.Size;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -21,9 +22,50 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-
+@Config
 @Autonomous(name="Red Back Duck Sequence", group="DucksAuto")
 public class AutoRedDuckDetectionBackSeq extends LinearOpMode {
+
+    public static double STARTING_POSE_X = 12;
+    public static double STARTING_POSE_Y = -61;
+    public static double STARTING_POSE_ANGLE = 90;
+    public static double LEFT_LINE_POSE_X = 13.5;
+    public static double LEFT_LINE_POSE_Y = -30;
+    public static double LEFT_LINE_POSE_ANGLE = 180;
+    public static double CENTER_LINE_POSE_X = 12;
+    public static double CENTER_LINE_POSE_Y = -36;
+    public static double CENTER_LINE_POSE_ANGLE = 90;
+    public static double RIGHT_LINE_POSE_X = 22.5;
+    public static double RIGHT_LINE_POSE_Y = -42;
+    public static double RIGHT_LINE_POSE_ANGLE = 90;
+    public static double LEFT_PIXEL_RETREAT = 12; // in
+    public static double LEFT_TURN_ANGLE = 180; // degrees
+    public static double LEFT_STRAFE = 28; // in
+    public static double LEFT_FORWARD_TO_PARK = 32; // in
+    public static double CENTER_PIXEL_RETREAT = 12; // in
+    public static double CENTER_TURN_ANGLE = 90; // degrees
+    public static double CENTER_STRAFE = 10; // in
+    public static double CENTER_FORWARD_TO_PARK = 46; // in
+    public static double RIGHT_PIXEL_RETREAT = 12; // in
+    public static double RIGHT_TURN_ANGLE = -90; // degrees
+    public static double RIGHT_STRAFE = 8; // in
+    public static double RIGHT_FORWARD_TO_PARK = 36; // in
+    public static double NO_DET_FORWARD = 2; // in
+    public static double NO_DET_STRAFE_TO_PARK = 36; // in
+
+
+    public static final Pose2d redBackLeftLine = new Pose2d(
+            LEFT_LINE_POSE_X,
+            LEFT_LINE_POSE_Y,
+            Math.toRadians(LEFT_LINE_POSE_ANGLE));
+    public static final Pose2d redBackCenterLine = new Pose2d(
+            CENTER_LINE_POSE_X,
+            CENTER_LINE_POSE_Y,
+            Math.toRadians(CENTER_LINE_POSE_ANGLE));
+    public static final Pose2d redBackRightLine = new Pose2d(
+            RIGHT_LINE_POSE_X,
+            RIGHT_LINE_POSE_Y,
+            Math.toRadians(RIGHT_LINE_POSE_ANGLE));
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;
     private CRServo claw1 = null;
@@ -94,14 +136,17 @@ public class AutoRedDuckDetectionBackSeq extends LinearOpMode {
         initDoubleVision();
         visionPortal.setProcessorEnabled(aprilTag, false);
 
-        Pose2d startingPose = DucksTrajectories.redBackStartingPose;
+        Pose2d startingPose = new Pose2d(
+                STARTING_POSE_X,
+                STARTING_POSE_Y,
+                Math.toRadians(STARTING_POSE_ANGLE));
         drive.setPoseEstimate(startingPose);
 
         TrajectorySequence redBackLeftSpikeMark =
                 drive.trajectorySequenceBuilder(startingPose)
                     .splineTo(
-                            DucksTrajectories.redBackLeftLine.vec(),
-                            DucksTrajectories.redBackLeftLine.getHeading())
+                            redBackLeftLine.vec(),
+                            redBackLeftLine.getHeading())
                     .addTemporalMarker(() -> {
                         claw1.setPower(1.0);
                         claw2.setPower(1.0);
@@ -111,14 +156,14 @@ public class AutoRedDuckDetectionBackSeq extends LinearOpMode {
                         claw1.setPower(0.0);
                         claw2.setPower(0.0);
                     })
-                    .back(12)
-                    .turn(Math.toRadians(180))
-                    .strafeRight(28)
-                    .forward(32)
+                    .back(LEFT_PIXEL_RETREAT)
+                    .turn(Math.toRadians(LEFT_TURN_ANGLE))
+                    .strafeRight(LEFT_STRAFE)
+                    .forward(LEFT_FORWARD_TO_PARK)
                     .build();
         TrajectorySequence redBackCenterSpikeMark =
                 drive.trajectorySequenceBuilder(startingPose)
-                    .lineToSplineHeading(DucksTrajectories.redBackCenterLine)
+                    .lineToSplineHeading(redBackCenterLine)
                     .addTemporalMarker(() -> {
                         claw1.setPower(1.0);
                         claw2.setPower(1.0);
@@ -128,14 +173,14 @@ public class AutoRedDuckDetectionBackSeq extends LinearOpMode {
                         claw1.setPower(0.0);
                         claw2.setPower(0.0);
                     })
-                    .back(12)
-                    .turn(Math.toRadians(90))
-                    .strafeRight(10)
-                    .forward(46)
+                    .back(CENTER_PIXEL_RETREAT)
+                    .turn(Math.toRadians(CENTER_TURN_ANGLE))
+                    .strafeRight(CENTER_STRAFE)
+                    .forward(CENTER_FORWARD_TO_PARK)
                     .build();
         TrajectorySequence redBackRightSpikeMark =
                 drive.trajectorySequenceBuilder(startingPose)
-                    .lineToSplineHeading(DucksTrajectories.redBackRightLine)
+                    .lineToSplineHeading(redBackRightLine)
                     .addTemporalMarker(() -> {
                         claw1.setPower(1.0);
                         claw2.setPower(1.0);
@@ -145,15 +190,15 @@ public class AutoRedDuckDetectionBackSeq extends LinearOpMode {
                         claw1.setPower(0.0);
                         claw2.setPower(0.0);
                     })
-                    .back(12)
-                    .turn(Math.toRadians(-90))
-                    .strafeRight(8)
-                    .forward(36)
+                    .back(RIGHT_PIXEL_RETREAT)
+                    .turn(Math.toRadians(RIGHT_TURN_ANGLE))
+                    .strafeRight(RIGHT_STRAFE)
+                    .forward(RIGHT_FORWARD_TO_PARK)
                     .build();
         TrajectorySequence redBackParkFromStartingPose =
                 drive.trajectorySequenceBuilder(startingPose)
-                    .forward(2)
-                    .strafeRight(36)
+                    .forward(NO_DET_FORWARD)
+                    .strafeRight(NO_DET_STRAFE_TO_PARK)
                     .build();
 
         waitForStart();
