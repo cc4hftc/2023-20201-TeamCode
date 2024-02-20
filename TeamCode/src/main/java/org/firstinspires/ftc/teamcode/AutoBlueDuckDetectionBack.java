@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Size;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -12,20 +13,16 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDir
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-
 import java.util.List;
 
 
-@Autonomous(name="Red Back Duck Detect", group="DucksAuto")
-public class AutoRedDuckDetectionBack extends LinearOpMode {
+@Autonomous(name="Blue Back Duck Detect", group="DucksAuto")
+public class AutoBlueDuckDetectionBack extends LinearOpMode {
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;
     private CRServo claw1 = null;
@@ -95,7 +92,7 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
         initDoubleVision();
         visionPortal.setProcessorEnabled(aprilTag, false);
 
-        Pose2d startingPose = DucksTrajectories.redBackStartingPose;
+        Pose2d startingPose = DucksTrajectories.blueBackStartingPose;
         drive.setPoseEstimate(startingPose);
 
         waitForStart();
@@ -145,22 +142,22 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
         // Drive to the prop spike mark
         if ( spikeMark == 1 ) { // Left
             drive.followTrajectory(
-                    drive.trajectoryBuilder( DucksTrajectories.redBackStartingPose )
-                            .splineTo(
-                                    DucksTrajectories.redBackLeftLine.vec(),
-                                    DucksTrajectories.redBackLeftLine.getHeading())
+                    drive.trajectoryBuilder( DucksTrajectories.blueBackStartingPose )
+                            .lineToSplineHeading(DucksTrajectories.blueBackLeftLine)
                             .build()
             );
         } else if ( spikeMark == 2 ) { // Center
             drive.followTrajectory(
-                    drive.trajectoryBuilder( DucksTrajectories.redBackStartingPose )
-                            .lineToSplineHeading(DucksTrajectories.redBackCenterLine)
+                    drive.trajectoryBuilder( DucksTrajectories.blueBackStartingPose )
+                            .lineToSplineHeading(DucksTrajectories.blueBackCenterLine)
                             .build()
             );
         } else if ( spikeMark == 3 ) { // Right
             drive.followTrajectory(
-                    drive.trajectoryBuilder( DucksTrajectories.redBackStartingPose )
-                            .lineToSplineHeading(DucksTrajectories.redBackRightLine)
+                    drive.trajectoryBuilder( DucksTrajectories.blueBackStartingPose )
+                            .splineTo(
+                                    DucksTrajectories.blueBackRightLine.vec(),
+                                    DucksTrajectories.blueBackRightLine.getHeading())
                             .build()
             );
         }
@@ -181,17 +178,17 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
             );
             drive.followTrajectorySequence(
                     drive.trajectorySequenceBuilder( new Pose2d() )
-                            .turn(Math.toRadians(180))
+                            .turn(Math.toRadians(90))
                             .build()
             );
             drive.followTrajectory(
                     drive.trajectoryBuilder( new Pose2d() )
-                            .strafeRight(28)
+                            .strafeLeft(8)
                             .build()
             );
             drive.followTrajectory(
                     drive.trajectoryBuilder( new Pose2d() )
-                            .forward(32)
+                            .forward(36)
                             .build()
             );
         } else if ( spikeMark == 2 ) { // Center
@@ -207,7 +204,7 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
             );
             drive.followTrajectory(
                     drive.trajectoryBuilder( new Pose2d() )
-                            .strafeRight(10)
+                            .strafeLeft(10)
                             .build()
             );
             drive.followTrajectory(
@@ -223,17 +220,17 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
             );
             drive.followTrajectorySequence(
                     drive.trajectorySequenceBuilder( new Pose2d() )
-                            .turn(Math.toRadians(-90))
+                            .turn(Math.toRadians(-180))
                             .build()
             );
             drive.followTrajectory(
                     drive.trajectoryBuilder( new Pose2d() )
-                            .strafeRight(8)
+                            .strafeLeft(28)
                             .build()
             );
             drive.followTrajectory(
                     drive.trajectoryBuilder( new Pose2d() )
-                            .forward(36)
+                            .forward(32)
                             .build()
             );
         }
