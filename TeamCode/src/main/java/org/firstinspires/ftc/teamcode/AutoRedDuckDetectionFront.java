@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import android.util.Size;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -20,9 +23,34 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-
+@Config
 @Autonomous(name="Red Front Duck Detect", group="DucksAuto")
 public class AutoRedDuckDetectionFront extends LinearOpMode {
+
+    public static double STARTING_POSE_X = -36;
+    public static double STARTING_POSE_Y = 61;
+    public static double STARTING_POSE_ANGLE = 90;
+    public static double LEFT_LINE_POSE_X = -46;
+    public static double LEFT_LINE_POSE_Y = -40;
+    public static double LEFT_LINE_POSE_ANGLE = 90;
+    public static double CENTER_LINE_POSE_X = -36;
+    public static double CENTER_LINE_POSE_Y = -36;
+    public static double CENTER_LINE_POSE_ANGLE = 90;
+    public static double RIGHT_LINE_POSE_X = -36;
+    public static double RIGHT_LINE_POSE_Y = -32;
+    public static double RIGHT_LINE_POSE_ANGLE = 0;
+    public static double LEFT_STRAFE = 12; // in
+    public static double LEFT_FORWARD = 29; // in
+    public static double LEFT_STRAFE_TO_PARK = 94; // in
+    public static double CENTER_PIXEL_RETREAT = 6; // in
+    public static double CENTER_STRAFE = 16; // in
+    public static double CENTER_FORWARD = 30; // in
+    public static double CENTER_STRAFE_TO_PARK = 112; // in
+    public static double RIGHT_PIXEL_RETREAT = 8; // in
+    public static double RIGHT_STRAFE = 22; // in
+    public static double RIGHT_FORWARD_TO_PARK = 104; // in
+    public static long PIXEL_SERVO_WAIT_MILLISECS = 2500;
+
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;
     private CRServo claw1 = null;
@@ -92,9 +120,24 @@ public class AutoRedDuckDetectionFront extends LinearOpMode {
         initDoubleVision();
         visionPortal.setProcessorEnabled(aprilTag, false);
 
-        Pose2d startingPose = DucksTrajectories.redFrontStartingPose;
+        Pose2d startingPose = new Pose2d(
+                STARTING_POSE_X,
+                STARTING_POSE_Y,
+                Math.toRadians(STARTING_POSE_ANGLE));
         drive.setPoseEstimate(startingPose);
 
+        Pose2d redFrontLeftLine = new Pose2d(
+                LEFT_LINE_POSE_X,
+                LEFT_LINE_POSE_Y,
+                Math.toRadians(LEFT_LINE_POSE_ANGLE));
+        Pose2d redFrontCenterLine = new Pose2d(
+                CENTER_LINE_POSE_X,
+                CENTER_LINE_POSE_Y,
+                Math.toRadians(CENTER_LINE_POSE_ANGLE));
+        Pose2d redFrontRightLine = new Pose2d(
+                RIGHT_LINE_POSE_X,
+                RIGHT_LINE_POSE_Y,
+                Math.toRadians(RIGHT_LINE_POSE_ANGLE));
         waitForStart();
 
         if (opModeIsActive()) {
@@ -142,22 +185,22 @@ public class AutoRedDuckDetectionFront extends LinearOpMode {
         // Drive to the prop spike mark
         if ( spikeMark == 1 ) { // Left
             drive.followTrajectory(
-                    drive.trajectoryBuilder( DucksTrajectories.redFrontStartingPose )
-                            .lineToSplineHeading(DucksTrajectories.redFrontLeftLine)
+                    drive.trajectoryBuilder( startingPose )
+                            .lineToSplineHeading(redFrontLeftLine)
                             .build()
             );
         } else if ( spikeMark == 2 ) { // Center
             drive.followTrajectory(
-                    drive.trajectoryBuilder( DucksTrajectories.redFrontStartingPose )
-                            .lineToSplineHeading(DucksTrajectories.redFrontCenterLine)
+                    drive.trajectoryBuilder( startingPose )
+                            .lineToSplineHeading(redFrontCenterLine)
                             .build()
             );
         } else if ( spikeMark == 3 ) { // Right
             drive.followTrajectory(
-                    drive.trajectoryBuilder( DucksTrajectories.redFrontStartingPose )
+                    drive.trajectoryBuilder( startingPose )
                             .splineTo(
-                                    DucksTrajectories.redFrontRightLine.vec(),
-                                    DucksTrajectories.redFrontRightLine.getHeading())
+                                    redFrontRightLine.vec(),
+                                    redFrontRightLine.getHeading())
                             .build()
             );
         }
@@ -165,74 +208,54 @@ public class AutoRedDuckDetectionFront extends LinearOpMode {
         // Deposit the purple pixel
         claw1.setPower(1.0);
         claw2.setPower(1.0);
-        sleep(2500);
+        sleep(PIXEL_SERVO_WAIT_MILLISECS);
         claw1.setPower(0.0);
         claw2.setPower(0.0);
 
         // Drive to park by backdrop
         if ( spikeMark == 1 ) { // Left
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .strafeRight(12)
-                            .build()
-            );
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .forward(29)
-                            .build()
-            );
-            drive.followTrajectorySequence(
-                    drive.trajectorySequenceBuilder( new Pose2d() )
-                            .turn(Math.toRadians(-90))
-                            .build()
-            );
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .forward(94)
-                            .build()
-            );
+            Trajectory leftStrafe = drive.trajectoryBuilder( redFrontLeftLine )
+                    .strafeLeft(LEFT_STRAFE)
+                    .build();
+            drive.followTrajectory( leftStrafe );
+            Trajectory leftForward = drive.trajectoryBuilder( leftStrafe.end() )
+                    .forward(LEFT_FORWARD)
+                    .build();
+            drive.followTrajectory( leftForward );
+            Trajectory leftStrafeToPark = drive.trajectoryBuilder( leftForward.end() )
+                    .strafeLeft(LEFT_STRAFE_TO_PARK)
+                    .build();
+            drive.followTrajectory( leftStrafeToPark );
         } else if ( spikeMark == 2 ) { // Center
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .back(6)
-                            .build()
-            );
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .strafeLeft(16)
-                            .build()
-            );
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .forward(30)
-                            .build()
-            );
-            drive.followTrajectorySequence(
-                    drive.trajectorySequenceBuilder( new Pose2d() )
-                            .turn(Math.toRadians(-90))
-                            .build()
-            );
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .forward(112)
-                            .build()
-            );
+            Trajectory centerPixelRetreat = drive.trajectoryBuilder( redFrontCenterLine )
+                    .back(CENTER_PIXEL_RETREAT)
+                    .build();
+            drive.followTrajectory( centerPixelRetreat );
+            Trajectory centerStrafe = drive.trajectoryBuilder( centerPixelRetreat.end() )
+                    .strafeLeft(CENTER_STRAFE)
+                    .build();
+            drive.followTrajectory( centerStrafe );
+            Trajectory centerForward = drive.trajectoryBuilder( centerStrafe.end() )
+                    .forward(CENTER_FORWARD)
+                    .build();
+            drive.followTrajectory( centerForward );
+            Trajectory centerStrafeToPark = drive.trajectoryBuilder( centerForward.end() )
+                    .strafeRight(CENTER_STRAFE_TO_PARK)
+                    .build();
+            drive.followTrajectory( centerStrafeToPark );
         } else if ( spikeMark == 3 ) { // Right
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .back(8)
-                            .build()
-            );
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .strafeLeft(22)
-                            .build()
-            );
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( new Pose2d() )
-                            .forward(104)
-                            .build()
-            );
+            Trajectory rightPixelRetreat = drive.trajectoryBuilder( redFrontRightLine )
+                    .back(RIGHT_PIXEL_RETREAT)
+                    .build();
+            drive.followTrajectory( rightPixelRetreat );
+            Trajectory rightStrafe = drive.trajectoryBuilder( rightPixelRetreat.end() )
+                    .strafeLeft(RIGHT_STRAFE)
+                    .build();
+            drive.followTrajectory( rightStrafe );
+            Trajectory rightForwardToPark = drive.trajectoryBuilder( rightStrafe.end() )
+                    .forward(RIGHT_FORWARD_TO_PARK)
+                    .build();
+            drive.followTrajectory( rightForwardToPark );
         }
 
     } // end runOpMode()
