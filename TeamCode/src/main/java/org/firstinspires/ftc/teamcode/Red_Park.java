@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -11,8 +12,8 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-
-@Autonomous(name="RedPArk", group="eric")
+@Config
+@Autonomous(name="RedPark", group="auto")
 public class Red_Park extends LinearOpMode {
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;
@@ -65,29 +66,17 @@ public class Red_Park extends LinearOpMode {
         drive.followTrajectory(Drive_to_center);
 
         if (Ldistance.getDistance(DistanceUnit.CM)<=30){
-            lift.setPower(0.5);
-            sleep(3500);
-            lift.setPower(0.0);
-            sleep(1000);
             drive.followTrajectory(backwards_Tune);
             drive.followTrajectory(SideShiftLeft);
             claw.setPower(1.0);
             claw2.setPower(1.0);
         } else if (Rdistance.getDistance(DistanceUnit.CM)<=30) {
-            lift.setPower(0.5);
-            sleep(3500);
-            lift.setPower(0.0);
-            sleep(1000);
             drive.followTrajectory(backwards_Tune);
             drive.followTrajectory(SideShiftRight);
             claw.setPower(1.0);
             claw2.setPower(1.0);
         } else{
             drive.followTrajectory(Go_Back_Forward_tape);
-            lift.setPower(0.5);
-            sleep(3500);
-            lift.setPower(0.0);
-            sleep(1000);
             drive.followTrajectory(Go_To_Forward_tape);
             claw.setPower(1.0);
             claw2.setPower(1.0);

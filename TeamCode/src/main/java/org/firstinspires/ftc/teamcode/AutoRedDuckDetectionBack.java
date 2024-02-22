@@ -5,6 +5,8 @@ import  android.util.Size;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -36,7 +38,7 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
     public static double CENTER_LINE_POSE_X = 12;
     public static double CENTER_LINE_POSE_Y = -36;
     public static double CENTER_LINE_POSE_ANGLE = 90;
-    public static double RIGHT_LINE_POSE_X = 22.5;
+    public static double RIGHT_LINE_POSE_X = 19;
     public static double RIGHT_LINE_POSE_Y = -42;
     public static double RIGHT_LINE_POSE_ANGLE = 90;
     public static double LEFT_PIXEL_RETREAT = 12; // in
@@ -44,8 +46,8 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
     public static double LEFT_BACK_TO_PARK = 36; // in
     public static double CENTER_PIXEL_RETREAT = 22; // in
     public static double CENTER_STRAFE = 36; // in
-    public static double RIGHT_PIXEL_RETREAT = 24; // in
-    public static double RIGHT_STRAFE = 28; // in
+    public static double RIGHT_PIXEL_RETREAT = 20; // in
+    public static double RIGHT_STRAFE = 20; // in
     public static double NO_DET_FORWARD = 2; // in
     public static double NO_DET_STRAFE_TO_PARK = 36; // in
     public static long PIXEL_SERVO_WAIT_MILLISECS = 2500;
@@ -138,6 +140,16 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
                 RIGHT_LINE_POSE_Y,
                 Math.toRadians(RIGHT_LINE_POSE_ANGLE));
 
+//        Trajectory leftPixelRetreat = drive.trajectoryBuilder( new Pose2d() )
+//                .back(LEFT_PIXEL_RETREAT)
+//                .build();
+//        Trajectory leftPixelStrafe = drive.trajectoryBuilder( new Pose2d() )
+//                .strafeLeft(LEFT_STRAFE)
+//                .build();
+//        Trajectory leftBackToPark = drive.trajectoryBuilder( new Pose2d() )
+//                .back(LEFT_BACK_TO_PARK)
+//                .build();
+
         waitForStart();
 
         if (opModeIsActive()) {
@@ -184,9 +196,10 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
 
         // Drive to the prop spike mark
         if ( spikeMark == 1 ) { // Left
-            drive.followTrajectory(
-                    drive.trajectoryBuilder( startingPose )
-                            .splineTo( redBackLeftLine.vec(), redBackLeftLine.getHeading() )
+            drive.followTrajectorySequence(
+                    drive.trajectorySequenceBuilder( startingPose )
+                            .forward(24)
+                            .turn(Math.toRadians(90))
                             .build()
             );
         } else if ( spikeMark == 2 ) { // Center
@@ -201,7 +214,7 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
                             .lineToSplineHeading( redBackRightLine )
                             .build()
             );
-        } else {
+        } /*else {
             Trajectory noDetWallEscape = drive.trajectoryBuilder( startingPose )
                     .forward(NO_DET_FORWARD)
                     .build();
@@ -210,7 +223,7 @@ public class AutoRedDuckDetectionBack extends LinearOpMode {
                     .strafeRight(NO_DET_STRAFE_TO_PARK)
                     .build();
             drive.followTrajectory( noDetStrafeToPark );
-        }
+        }*/
 
         // Deposit the purple pixel
         claw1.setPower(1.0);
