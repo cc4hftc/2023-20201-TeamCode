@@ -30,24 +30,18 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
     public static double STARTING_POSE_X = 12;
     public static double STARTING_POSE_Y = 61;
     public static double STARTING_POSE_ANGLE = 270;
-    public static double LEFT_LINE_POSE_X = 22.5;
-    public static double LEFT_LINE_POSE_Y = 40;
-    public static double LEFT_LINE_POSE_ANGLE = 180;
-    public static double CENTER_LINE_POSE_X = 12;
-    public static double CENTER_LINE_POSE_Y = 36;
-    public static double CENTER_LINE_POSE_ANGLE = 270;
-    public static double RIGHT_LINE_POSE_X = 13.5;
-    public static double RIGHT_LINE_POSE_Y = 32;
-    public static double RIGHT_LINE_POSE_ANGLE = 360;
-    public static double LEFT_PIXEL_RETREAT = 24; // in
-    public static double LEFT_PARK = 28; // in
-    public static double CENTER_PIXEL_RETREAT = 22; // in
-    public static double CENTER_PARK = 36; // in
-    public static double RIGHT_PIXEL_RETREAT = 12; // in
-    public static double RIGHT_PARK = 28; // in
-    public static double TURN = 90;
-    public static double NO_DET_FORWARD = 2; // in
-    public static double NO_DET_PARK = 36; // in
+
+    // prop values
+    public static double LEFT_FORWARD = 24;
+    public static double LEFT_TURN = 90;
+    public static double CENTER_FORWARD = 24;
+    public static double RIGHT_FORWARD = 24;
+    public static double RIGHT_TURN = -90;
+
+    // park values
+    public static double PARK = -24;
+    public static double LEFT_PIXEL_RETREAT = 4; // in
+    public static double RIGHT_PIXEL_RETREAT = 4; // in
     public static long PIXEL_SERVO_WAIT_MILLISECS = 2500;
 
     DistanceSensor Ldistance;
@@ -125,73 +119,37 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
                 Math.toRadians(STARTING_POSE_ANGLE));
         drive.setPoseEstimate(startingPose);
 
-        Pose2d blueBackLeftLine = new Pose2d(
-                LEFT_LINE_POSE_X,
-                LEFT_LINE_POSE_Y,
-                Math.toRadians(LEFT_LINE_POSE_ANGLE));
-        Pose2d blueBackCenterLine = new Pose2d(
-                CENTER_LINE_POSE_X,
-                CENTER_LINE_POSE_Y,
-                Math.toRadians(CENTER_LINE_POSE_ANGLE));
-        Pose2d blueBackRightLine = new Pose2d(
-                RIGHT_LINE_POSE_X,
-                RIGHT_LINE_POSE_Y,
-                Math.toRadians(RIGHT_LINE_POSE_ANGLE));
+        TrajectorySequence leftProp = drive.trajectorySequenceBuilder(startingPose)
+                .forward(LEFT_FORWARD)
+                .turn(Math.toRadians(LEFT_TURN))
+                .build();
 
-        TrajectorySequence leftPropDrive = drive.trajectorySequenceBuilder(startingPose)
-                // Put pixel on spike mark
-                .lineToSplineHeading(blueBackLeftLine)
-                .addTemporalMarker(() -> {
-                    claw1.setPower(1.0);
-                    claw2.setPower(1.0);
-                    sleep(PIXEL_SERVO_WAIT_MILLISECS );
-                    claw1.setPower(0.0);
-                    claw2.setPower(0.0);
-                })
-
+        TrajectorySequence leftPark = drive.trajectorySequenceBuilder(leftProp.end())
                 .back(LEFT_PIXEL_RETREAT)
-                .turn(Math.toRadians(TURN))
-                .forward(LEFT_PARK)
-
+                .turn(Math.toRadians(-LEFT_TURN))
+                .back(LEFT_FORWARD)
+                .strafeRight(PARK)
                 .build();
 
-
-        TrajectorySequence centerPropDrive = drive.trajectorySequenceBuilder(startingPose)
-                // Put pixel on spike mark
-                .lineToSplineHeading(blueBackCenterLine)
-                .addTemporalMarker(() -> {
-                    claw1.setPower(1.0);
-                    claw2.setPower(1.0);
-                    sleep(PIXEL_SERVO_WAIT_MILLISECS );
-                    claw1.setPower(0.0);
-                    claw2.setPower(0.0);
-                })
-
-                .back(CENTER_PIXEL_RETREAT)
-                .turn(Math.toRadians(TURN))
-                .forward(CENTER_PARK)
-
+        TrajectorySequence centerProp = drive.trajectorySequenceBuilder(startingPose)
+                .forward(CENTER_FORWARD)
                 .build();
 
-        TrajectorySequence rightPropDrive = drive.trajectorySequenceBuilder(startingPose)
-                // Put pixel on spike mark
-                .forward(RIGHT_LINE_POSE_Y - STARTING_POSE_Y)
-                .turn(Math.toRadians(RIGHT_LINE_POSE_ANGLE - STARTING_POSE_ANGLE))
-                .addTemporalMarker(() -> {
-                    claw1.setPower(1.0);
-                    claw2.setPower(1.0);
-                    sleep(PIXEL_SERVO_WAIT_MILLISECS );
-                    claw1.setPower(0.0);
-                    claw2.setPower(0.0);
-                })
+        TrajectorySequence centerPark = drive.trajectorySequenceBuilder(centerProp.end())
+                .back(CENTER_FORWARD)
+                .strafeRight(PARK)
+                .build();
 
+        TrajectorySequence rightProp = drive.trajectorySequenceBuilder(startingPose)
+                .forward(RIGHT_FORWARD)
+                .turn(Math.toRadians(RIGHT_TURN))
+                .build();
+
+        TrajectorySequence rightPark = drive.trajectorySequenceBuilder(rightProp.end())
                 .back(RIGHT_PIXEL_RETREAT)
-                .turn(Math.toRadians(-(RIGHT_LINE_POSE_ANGLE - STARTING_POSE_ANGLE)))
-
-                .back(-(RIGHT_LINE_POSE_Y - STARTING_POSE_Y))
-                .turn(Math.toRadians(TURN))
-                .forward(RIGHT_PARK)
-
+                .turn(Math.toRadians(-RIGHT_TURN))
+                .back(RIGHT_FORWARD)
+                .strafeRight(PARK)
                 .build();
 
         waitForStart();
@@ -199,7 +157,7 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
         if (opModeIsActive()) {
             int iterations = 1;
             boolean propFound = false;
-            while ( iterations < 1000 && spikeMark == 0 ) {
+            while ( iterations < 600 && spikeMark == 0 ) {
                 //while ( opModeIsActive() ) {
                 List<Recognition> currentRecognitions = tfod.getRecognitions();
                 for ( Recognition recognition : currentRecognitions ) {
@@ -240,17 +198,15 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
 
         // Choose the correct trajectory sequence
         if ( spikeMark == 1 ) { // Left
-            drive.followTrajectorySequence(leftPropDrive);
+            drive.followTrajectorySequence(leftProp);
         } else if ( spikeMark == 2 ) { // Center
-            drive.followTrajectorySequence(centerPropDrive);
+            drive.followTrajectorySequence(centerProp);
         } else if ( spikeMark == 3 ) { // Right
-            drive.followTrajectorySequence(rightPropDrive);
+            drive.followTrajectorySequence(rightProp);
         } else {
             drive.followTrajectorySequence(
                     drive.trajectorySequenceBuilder(startingPose)
-                            .forward(NO_DET_FORWARD)
-                            .turn(Math.toRadians(TURN))
-                            .forward(NO_DET_PARK)
+                            .strafeRight(PARK)
                             .build()
             );
         }
@@ -258,10 +214,17 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
         // Deposit the purple pixel
         claw1.setPower(1.0);
         claw2.setPower(1.0);
-        sleep(PIXEL_SERVO_WAIT_MILLISECS);
+        sleep(PIXEL_SERVO_WAIT_MILLISECS );
         claw1.setPower(0.0);
         claw2.setPower(0.0);
 
+        if ( spikeMark == 1 ) { // Left
+            drive.followTrajectorySequence(leftPark);
+        } else if ( spikeMark == 2 ) { // Center
+            drive.followTrajectorySequence(centerPark);
+        } else if ( spikeMark == 3 ) { // Right
+            drive.followTrajectorySequence(rightPark);
+        }
     } // end runOpMode()
 
     /**

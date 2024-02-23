@@ -31,20 +31,18 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
     public static double STARTING_POSE_X = 12;
     public static double STARTING_POSE_Y = -61;
     public static double STARTING_POSE_ANGLE = 90;
+
+    // prop values
     public static double LEFT_FORWARD = 24;
     public static double LEFT_TURN = 90;
     public static double CENTER_FORWARD = 24;
     public static double RIGHT_FORWARD = 24;
     public static double RIGHT_TURN = -90;
-    public static double LEFT_PIXEL_RETREAT = 12; // in
-    public static double LEFT_PARK = 28; // in
-    public static double CENTER_PIXEL_RETREAT = 22; // in
-    public static double CENTER_PARK = 36; // in
-    public static double CENTER_TURN = -90;
-    public static double RIGHT_PIXEL_RETREAT = 20; // in
-    public static double RIGHT_PARK = 20; // in
-    public static double NO_DET_FORWARD = 2; // in
-    public static double NO_DET_PARK = 36; // in
+
+    // park values
+    public static double PARK = 24;
+    public static double LEFT_PIXEL_RETREAT = 4; // in
+    public static double RIGHT_PIXEL_RETREAT = 4; // in
     public static long PIXEL_SERVO_WAIT_MILLISECS = 2500;
 
     DistanceSensor Ldistance;
@@ -131,8 +129,7 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
                 .back(LEFT_PIXEL_RETREAT)
                 .turn(Math.toRadians(-LEFT_TURN))
                 .back(LEFT_FORWARD)
-                .turn(Math.toRadians(LEFT_TURN))
-                .back(LEFT_PARK)
+                .strafeRight(PARK)
                 .build();
 
         TrajectorySequence centerProp = drive.trajectorySequenceBuilder(startingPose)
@@ -140,9 +137,8 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
                 .build();
 
         TrajectorySequence centerPark = drive.trajectorySequenceBuilder(centerProp.end())
-                .back(CENTER_PIXEL_RETREAT)
-                .turn(Math.toRadians(CENTER_TURN))
-                .forward(CENTER_PARK)
+                .back(CENTER_FORWARD)
+                .strafeRight(PARK)
                 .build();
 
 
@@ -152,10 +148,10 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
                 .build();
 
         TrajectorySequence rightPark = drive.trajectorySequenceBuilder(rightProp.end())
-                .turn(Math.toRadians(-RIGHT_TURN))
                 .back(RIGHT_PIXEL_RETREAT)
-                .turn(Math.toRadians(RIGHT_TURN))
-                .forward(RIGHT_PARK)
+                .turn(Math.toRadians(-RIGHT_TURN))
+                .back(RIGHT_FORWARD)
+                .strafeRight(PARK)
                 .build();
 
         waitForStart();
@@ -163,7 +159,7 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
         if (opModeIsActive()) {
             int iterations = 1;
             boolean propFound = false;
-            while ( iterations < 1000 && spikeMark == 0 ) {
+            while ( iterations < 600 && spikeMark == 0 ) {
                 //while ( opModeIsActive() ) {
                 List<Recognition> currentRecognitions = tfod.getRecognitions();
                 for ( Recognition recognition : currentRecognitions ) {
@@ -212,9 +208,7 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
         } else {
             drive.followTrajectorySequence(
                     drive.trajectorySequenceBuilder(startingPose)
-                            .forward(NO_DET_FORWARD)
-                            .turn(Math.toRadians(CENTER_TURN))
-                            .forward(NO_DET_PARK)
+                            .strafeRight(PARK)
                             .build()
             );
         }
