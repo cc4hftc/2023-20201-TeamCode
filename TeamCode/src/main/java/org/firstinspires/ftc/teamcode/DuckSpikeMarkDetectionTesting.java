@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 
 import java.util.List;
 
-
+@Disabled
 @Autonomous(name="Duck TFOD Location", group="DucksTesting")
 public class DuckSpikeMarkDetectionTesting extends LinearOpMode {
 

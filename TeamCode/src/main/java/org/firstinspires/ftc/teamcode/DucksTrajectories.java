@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+@Disabled
 public class DucksTrajectories {
 
     // Red Frontstage

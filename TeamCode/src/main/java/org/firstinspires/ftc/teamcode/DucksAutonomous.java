@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 // Import general FTC and motion libraries
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,7 +28,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 // Import list for iterating over objects detected
 import java.util.List;
-
+@Disabled
 public class DucksAutonomous extends LinearOpMode {
 
     // Red Frontstage

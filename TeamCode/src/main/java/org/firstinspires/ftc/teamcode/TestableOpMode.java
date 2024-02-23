@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import org.firstinspires.ftc.teamcode.fakes.TestOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
+import org.firstinspires.ftc.teamcode.fakes.TestOpMode;
+@Disabled
 public class TestableOpMode extends TestOpMode {
 
     @Override
