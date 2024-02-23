@@ -36,8 +36,10 @@ public class Driver_Controlled extends OpMode {
     private DcMotor back_right  = null;
     private DcMotorEx lift = null;
     private DcMotor hang = null;
-    private CRServo claw = null;
+    private CRServo claw1 = null;
     private CRServo claw2 = null;
+    private CRServo claw3 = null;
+    private CRServo claw4 = null;
     private Servo plane_launcher = null;
     double POWER = 0;
     double multiplier;
@@ -67,9 +69,12 @@ public class Driver_Controlled extends OpMode {
 
         hang = hardwareMap.get(DcMotor.class, "hang");
 
-        claw = hardwareMap.get(CRServo.class, "claw1");
+        claw1 = hardwareMap.get(CRServo.class, "claw1");
         claw2 = hardwareMap.get(CRServo.class, "claw2");
+        claw3 = hardwareMap.get(CRServo.class, "claw3");
+        claw4 = hardwareMap.get(CRServo.class, "claw4");
         claw2.setDirection(CRServo.Direction.REVERSE);
+        claw4.setDirection(DcMotorSimple.Direction.REVERSE);
 
         plane_launcher = hardwareMap.get(Servo.class, "launcher");
 
@@ -155,16 +160,22 @@ public class Driver_Controlled extends OpMode {
         }
 
         if (gamepad2.a) {//Close?
-            claw.setPower(1.0);
+            claw1.setPower(1.0);
             claw2.setPower(1.0);
+            claw3.setPower(1.0);
+            claw4.setPower(1.0);
         }
         else if (gamepad2.b) {//Open?----+
-            claw.setPower(-1.0);
+            claw1.setPower(-1.0);
             claw2.setPower(-1.0);
+            claw3.setPower(-1.0);
+            claw4.setPower(-1.0);
         }
         else {
-            claw.setPower(0.00);
-            claw2.setPower(0.00);
+            claw1.setPower(0.0);
+            claw2.setPower(0.0);
+            claw3.setPower(0.0);
+            claw4.setPower(0.0);
         }
 
         if (gamepad1.left_bumper) {
@@ -175,10 +186,6 @@ public class Driver_Controlled extends OpMode {
         }
 
         target += gamepad2.left_stick_y * armmult;
-
-        if (target > 0) {
-            target = 0;
-        }
 
         hang.setPower(gamepad2.right_stick_y);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
