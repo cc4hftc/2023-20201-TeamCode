@@ -24,7 +24,7 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 @Config
-@Autonomous(name="Blue Back Duck Sequence", group="DucksAuto")
+@Autonomous(name="Blue Back Duck Sequence", group="DucksAutoSequence")
 public class AutoBlueDuckSequenceBack extends LinearOpMode {
 
     public static double STARTING_POSE_X = 12;
@@ -34,7 +34,7 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
     // prop values
     public static double LEFT_FORWARD = 24;
     public static double LEFT_TURN = 90;
-    public static double CENTER_FORWARD = 24;
+    public static double CENTER_FORWARD = 26;
     public static double RIGHT_FORWARD = 24;
     public static double RIGHT_TURN = -90;
 
@@ -143,6 +143,7 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
         TrajectorySequence rightProp = drive.trajectorySequenceBuilder(startingPose)
                 .forward(RIGHT_FORWARD)
                 .turn(Math.toRadians(RIGHT_TURN))
+                .forward(RIGHT_PIXEL_RETREAT)
                 .build();
 
         TrajectorySequence rightPark = drive.trajectorySequenceBuilder(rightProp.end())
