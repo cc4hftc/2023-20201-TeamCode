@@ -48,6 +48,8 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
     DistanceSensor Rdistance;
     private CRServo claw1 = null;
     private CRServo claw2 = null;
+    private CRServo claw3 = null;
+    private CRServo claw4 = null;
     private DcMotor lift = null;
 
     private static final boolean USE_WEBCAM = true; // true for webcam, false for phone camera
@@ -107,6 +109,9 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
         claw1 = hardwareMap.get(CRServo.class, "claw1");
         claw2 = hardwareMap.get(CRServo.class, "claw2");
         claw2.setDirection(CRServo.Direction.REVERSE);
+        claw3 = hardwareMap.get(CRServo.class, "claw3");
+        claw4 = hardwareMap.get(CRServo.class, "claw4");
+        claw4.setDirection(CRServo.Direction.REVERSE);
         lift = hardwareMap.get(DcMotor.class, "lift");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -226,6 +231,27 @@ public class AutoBlueDuckSequenceBack extends LinearOpMode {
         } else if ( spikeMark == 3 ) { // Right
             drive.followTrajectorySequence(rightPark);
         }
+
+        drive.followTrajectory(
+                drive.trajectoryBuilder( new Pose2d() )
+                        .forward(1)
+                        .build()
+        );
+        claw1.setPower(1.0);
+        claw2.setPower(1.0);
+        claw3.setPower(1.0);
+        claw4.setPower(1.0);
+        sleep((PIXEL_SERVO_WAIT_MILLISECS / 3) * 2);
+        drive.followTrajectory(
+                drive.trajectoryBuilder( new Pose2d() )
+                        .back(1)
+                        .build()
+        );
+        sleep((PIXEL_SERVO_WAIT_MILLISECS / 3) * 2);
+        claw1.setPower(0.0);
+        claw2.setPower(0.0);
+        claw3.setPower(0.0);
+        claw4.setPower(0.0);
     } // end runOpMode()
 
     /**
