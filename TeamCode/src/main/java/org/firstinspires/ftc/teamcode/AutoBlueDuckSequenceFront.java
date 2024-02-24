@@ -121,15 +121,30 @@ public class AutoBlueDuckSequenceFront extends LinearOpMode {
                 .forward(LEFT_PIXEL_RETREAT)
                 .build();
 
+        TrajectorySequence leftPark = drive.trajectorySequenceBuilder(leftProp.end())
+                .back(LEFT_PIXEL_RETREAT)
+                .turn(Math.toRadians(-LEFT_TURN))
+                .back(LEFT_FORWARD)
+                .build();
+
         TrajectorySequence centerProp = drive.trajectorySequenceBuilder(startingPose)
                 .forward(CENTER_FORWARD)
                 .build();
 
+        TrajectorySequence centerPark = drive.trajectorySequenceBuilder(centerProp.end())
+                .back(CENTER_FORWARD)
+                .build();
 
         TrajectorySequence rightProp = drive.trajectorySequenceBuilder(startingPose)
                 .forward(RIGHT_FORWARD)
                 .turn(Math.toRadians(RIGHT_TURN))
                 .forward(RIGHT_PIXEL_RETREAT)
+                .build();
+
+        TrajectorySequence rightPark = drive.trajectorySequenceBuilder(rightProp.end())
+                .back(RIGHT_PIXEL_RETREAT)
+                .turn(Math.toRadians(-RIGHT_TURN))
+                .back(RIGHT_FORWARD)
                 .build();
 
         waitForStart();
@@ -192,6 +207,14 @@ public class AutoBlueDuckSequenceFront extends LinearOpMode {
             sleep(PIXEL_SERVO_WAIT_MILLISECS);
             claw1.setPower(0.0);
             claw2.setPower(0.0);
+        }
+
+        if ( spikeMark == 1 ) { // Left
+            drive.followTrajectorySequence(leftPark);
+        } else if ( spikeMark == 2 ) { // Center
+            drive.followTrajectorySequence(centerPark);
+        } else if ( spikeMark == 3 ) { // Right
+            drive.followTrajectorySequence(rightPark);
         }
 
     } // end runOpMode()

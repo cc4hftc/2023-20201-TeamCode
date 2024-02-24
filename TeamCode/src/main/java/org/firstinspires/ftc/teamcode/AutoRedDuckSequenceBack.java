@@ -234,26 +234,15 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
             drive.followTrajectorySequence(rightPark);
         }
 
-        drive.followTrajectory(
-                drive.trajectoryBuilder( new Pose2d() )
-                        .forward(1)
-                        .build()
-        );
-        claw1.setPower(1.0);
-        claw2.setPower(1.0);
-        claw3.setPower(1.0);
-        claw4.setPower(1.0);
-        sleep((PIXEL_SERVO_WAIT_MILLISECS / 3) * 2);
-        drive.followTrajectory(
-                drive.trajectoryBuilder( new Pose2d() )
-                        .back(1)
-                        .build()
-        );
-        sleep((PIXEL_SERVO_WAIT_MILLISECS / 3) * 2);
-        claw1.setPower(0.0);
-        claw2.setPower(0.0);
+        claw3.setPower(-1.0);
+        claw4.setPower(-1.0);
+        sleep(PIXEL_SERVO_WAIT_MILLISECS);
         claw3.setPower(0.0);
         claw4.setPower(0.0);
+
+        lift.setPower(-1.0);
+        sleep(PIXEL_SERVO_WAIT_MILLISECS);
+        lift.setPower(0.0);
     } // end runOpMode()
 
     /**
