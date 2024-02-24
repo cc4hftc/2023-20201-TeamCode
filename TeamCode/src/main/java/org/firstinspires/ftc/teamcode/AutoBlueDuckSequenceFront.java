@@ -123,6 +123,7 @@ public class AutoBlueDuckSequenceFront extends LinearOpMode {
 
         TrajectorySequence leftPark = drive.trajectorySequenceBuilder(leftProp.end())
                 .back(LEFT_PIXEL_RETREAT)
+                .strafeLeft(LEFT_PIXEL_RETREAT)
                 .turn(Math.toRadians(-LEFT_TURN))
                 .back(LEFT_FORWARD)
                 .build();
@@ -138,7 +139,6 @@ public class AutoBlueDuckSequenceFront extends LinearOpMode {
         TrajectorySequence rightProp = drive.trajectorySequenceBuilder(startingPose)
                 .forward(RIGHT_FORWARD)
                 .turn(Math.toRadians(RIGHT_TURN))
-                .forward(RIGHT_PIXEL_RETREAT)
                 .build();
 
         TrajectorySequence rightPark = drive.trajectorySequenceBuilder(rightProp.end())

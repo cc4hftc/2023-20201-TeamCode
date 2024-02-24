@@ -35,7 +35,7 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
     // prop values
     public static double LEFT_FORWARD = 24;
     public static double LEFT_TURN = 90;
-    public static double CENTER_FORWARD = 26;
+    public static double CENTER_FORWARD = 24;
     public static double RIGHT_FORWARD = 24;
     public static double RIGHT_TURN = -90;
 
@@ -43,7 +43,10 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
     public static double PARK = 24;
     public static double LEFT_PIXEL_RETREAT = 4; // in
     public static double RIGHT_PIXEL_RETREAT = 4; // in
+
+    // movement values
     public static long PIXEL_SERVO_WAIT_MILLISECS = 2500;
+    public static long ARM_SERVO_WAIT_MILLISECS = 1000;
 
     DistanceSensor Ldistance;
     DistanceSensor Rdistance;
@@ -156,6 +159,7 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
         TrajectorySequence rightPark = drive.trajectorySequenceBuilder(rightProp.end())
                 .back(RIGHT_PIXEL_RETREAT)
                 .turn(Math.toRadians(-RIGHT_TURN))
+                .strafeRight(RIGHT_PIXEL_RETREAT)
                 .back(RIGHT_FORWARD)
                 .strafeRight(PARK)
                 .build();
@@ -240,8 +244,8 @@ public class AutoRedDuckSequenceBack extends LinearOpMode {
         claw3.setPower(0.0);
         claw4.setPower(0.0);
 
-        lift.setPower(-1.0);
-        sleep(PIXEL_SERVO_WAIT_MILLISECS);
+        lift.setPower(-0.5);
+        sleep(ARM_SERVO_WAIT_MILLISECS);
         lift.setPower(0.0);
     } // end runOpMode()
 

@@ -154,9 +154,9 @@ public class Driver_Controlled extends OpMode {
         // if x and y
         // button pressed then launch airplane
         if (gamepad2.x && gamepad2.y) {
-            plane_launcher.setPosition(180);
-            try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
             plane_launcher.setPosition(0);
+            try {Thread.sleep(1000);} catch (InterruptedException ignored) {}
+            plane_launcher.setPosition(180);
         }
 
         if (gamepad2.a) {//Close?
